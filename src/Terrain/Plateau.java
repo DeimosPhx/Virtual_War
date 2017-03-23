@@ -15,6 +15,11 @@ public class Plateau{
 		this.tailleX = taillex;
 		this.tailleY = tailley;
 		this.graphique = false;
+		for(int i=0;i<taillex;i++){
+			for(int j=0;j<tailley;j++){
+				this.grille[i][j] = new Parcelle(new Coordonnees(i,j));
+			}
+		}
 	}
 	public Plateau(int taillex,int tailley,boolean graphique){
 		this(taillex,tailley);
@@ -32,6 +37,15 @@ public class Plateau{
 			}
 		}
 	}*/
+	public boolean estVide(Coordonnees cord){
+		return grille[cord.getAbscisse()][cord.getOrdonnee()].estVide();
+	}
+	public void setObstacle(Coordonnees cord){
+		grille[cord.getAbscisse()][cord.getOrdonnee()] = new Obstacle(cord);
+	}
+	public void setBase(Coordonnees cord,int equipe){
+		grille[cord.getAbscisse()][cord.getOrdonnee()] = new Base(cord,equipe);
+	}
 	public void deplacer(String direction,int x,int y){
 		/*char tmp = ' ';
 		switch(direction){

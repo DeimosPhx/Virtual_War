@@ -6,7 +6,13 @@ public class Parcelle {
 	public Parcelle(Coordonnees cord){
 		this.cord = cord;
 	}
+	public boolean estVide(){
+		return true;
+	}
 	public Coordonnees getCord(){
 		return this.cord;
+	}
+	public String toString(){
+		return " ";
 	}
 }
