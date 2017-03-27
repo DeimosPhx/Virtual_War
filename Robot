@@ -1,0 +1,26 @@
+package unite;
+
+import Terrain.Coordonnees;
+import Terrain.Parcelle;
+import Terrain.Vue;
+
+public abstract class Robot extends Parcelle {
+	public Robot(Coordonnees cord) {
+		super(cord);
+	}
+	int equipe;
+	int energie;
+	Vue vue;
+	Coordonnees coordonnees;
+	
+	
+	abstract int getEnergie();
+	abstract int getDegat();
+	abstract int getPortee();
+	abstract int getDeplacement();
+	abstract int getCout();
+	abstract int getCoutAvancer();
+	abstract int getEnergieRecupEnBase();
+	abstract void tirer(Coordonnees cible);
+}
+	

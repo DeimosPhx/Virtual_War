@@ -1,0 +1,30 @@
+package unite;
+
+import Terrain.Coordonnees;
+import Terrain.Vue;
+
+public class Tireur extends Robot {
+	
+	public Tireur(int equipe, Vue vue, Coordonnees coord) {
+		super(coord);
+		super.energie = 40;
+		super.equipe = equipe;
+		super.vue = vue;
+	}
+	
+	public int getEnergie() {		return super.energie;}
+	public int getDegat() {			return 3;}
+	public int getPortee() {		return 3;}
+	public int getDeplacement() {	return 1;}
+	public int getCout() {			return 2;}
+	public int getCoutAvancer() { 	return 1;}
+	public int getEnergieRecupEnBase() {return 2;}
+	
+	public void tirer(Coordonnees cible) {
+		// a voir avec le vue	
+	}
+	public void peutTirer(Coordonnees cible){
+		//a voir avec le vue
+	}
+	
+}
