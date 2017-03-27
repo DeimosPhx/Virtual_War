@@ -2,7 +2,7 @@ package Terrain;
 /*import javax.swing.*;
 import java.awt.*;*/
 /*
- * Ebauche de plateau graphique intégré au code.
+ * Ebauche de plateau graphique intÃ©grÃ© au code.
  */
 public class Plateau{
 	//attributs
@@ -46,6 +46,10 @@ public class Plateau{
 	public void setBase(Coordonnees cord,int equipe){
 		grille[cord.getAbscisse()][cord.getOrdonnee()] = new Base(cord,equipe);
 	}
+	public Parcelle getContenu(Coordonnees cord){
+	return grille[cord.getAbscisse()][cord.getOrdonnee()];
+	}
+
 	public void deplacer(String direction,int x,int y){
 		/*char tmp = ' ';
 		switch(direction){
