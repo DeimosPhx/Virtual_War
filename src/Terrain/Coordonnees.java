@@ -14,7 +14,9 @@ public class Coordonnees {
 	public int getOrdonnee() {
 		return ordonnee;
 	}
-	
+	public Coordonnees multiplier(int facteur){
+		return new Coordonnees(getAbscisse()*facteur, getOrdonnee()*facteur);
+	}
 	public Coordonnees cibler(Coordonnees cord){
 		return new Coordonnees(this.getAbscisse() + cord.getAbscisse(),this.getOrdonnee() + cord.getOrdonnee());
 	}
