@@ -64,7 +64,15 @@ public class Plateau{
 	}
 	public boolean deplacer(Robot rob,Direction direc){
 		Coordonnees cord_unit = rob.getCord();
-		if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Base){
+		if(cord_unit.cibler(direc.getCoordonnees()).getAbscisse() < 0 || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() < 0 || cord_unit.cibler(direc.getCoordonnees()).getAbscisse() > this.grille.length || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() > this.grille[0].length){
+			/*
+			 * destination: en dehors du plateau
+			 * effet: cancel deplacement
+			 * return: false
+			 */
+			return false;
+		}
+		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Base){
 			/*
 			 * destination: base
 			 * effet: ajout de l'unité dans la liste de la Base
