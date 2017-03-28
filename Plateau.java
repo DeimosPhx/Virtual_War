@@ -57,7 +57,7 @@ public class Plateau{
 	}
 	public Parcelle getContenu(Coordonnees cord){
 		return grille[cord.getAbscisse()][cord.getOrdonnee()];
-		}
+	}
 	
 	public void setMine(Coordonnees cord, Mine mine){
 		grille[cord.getAbscisse()][cord.getOrdonnee()] = mine;
