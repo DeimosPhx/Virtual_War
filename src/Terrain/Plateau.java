@@ -70,7 +70,6 @@ public class Plateau{
 			 * effet: ajout de l'unité dans la liste de la Base
 			 * return: true
 			 */
-			
 			return true;
 		}
 		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Obstacle || this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Robot){
