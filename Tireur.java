@@ -34,7 +34,7 @@ public class Tireur extends Robot {
 	}
 
 	public boolean peutTirer(Direction direction) { //KISS KISS ON TE DIT
-		for(int facteur = 1; facteur <=3; facteur++){
+		for(int facteur = 1; facteur <= getPortee(); facteur++){
 			if(plateau.estDans(this.coordonnees.cibler(direction.getCoordonnees().multiplier(facteur)))){
 				if(plateau.getContenu(this.coordonnees.cibler(direction.getCoordonnees().multiplier(facteur))) instanceof Robot){
 					if(getRobotFromPlateau(direction).equipe == this.equipe){
