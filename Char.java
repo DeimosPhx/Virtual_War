@@ -8,17 +8,14 @@ public class Char extends Robot{
 
 	public Char(int equipe, Coordonnees coord, Plateau plateau) {
 		super(coord);
+		this.coordonnees = coord;
 		super.energie = 60;
 		super.equipe = equipe;
 		super.plateau = plateau;
 	}
 	
 	private Robot getRobotFromPlateau(Direction direction){
-		if(this.peutTirer(direction)){
 		return (Robot) plateau.getContenu(this.coordonnees.cibler(direction.getCoordonnees()));
-		}
-		System.out.println("Ce n'est pas un robot !");
-		return null;
 	}
 	
 	public int getEnergie() {		return super.energie;}
@@ -29,7 +26,7 @@ public class Char extends Robot{
 	public int getCoutAvancer() { 	return 5;}
 	public int getEnergieRecupEnBase() {return 2;}
 	
-	void tirer(Direction direction) {
+	public void tirer(Direction direction) {
 		getRobotFromPlateau(direction).subitDegatsEtMeurtPotentiellement(this.getDegat());
 	}
 
@@ -37,7 +34,7 @@ public class Char extends Robot{
 		for(int facteur = 1; facteur <= getPortee(); facteur++){
 			if(plateau.estDans(this.coordonnees.cibler(direction.getCoordonnees().multiplier(facteur)))){
 				if(plateau.getContenu(this.coordonnees.cibler(direction.getCoordonnees().multiplier(facteur))) instanceof Robot){
-					if(getRobotFromPlateau(direction).equipe == this.equipe){
+					if(getRobotFromPlateau(direction).getEquipe() != this.equipe){
 						return true;
 					}
 				}
@@ -55,5 +52,11 @@ public class Char extends Robot{
 	}
 	void recuperationEnergie() {
 		this.energie += this.getEnergieRecupEnBase();
+	}
+	public String toString(){
+		if(getEquipe() == 1){
+			return "C";
+		}
+		return "c";
 	}
 }
