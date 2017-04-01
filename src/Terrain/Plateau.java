@@ -26,6 +26,9 @@ public class Plateau{
 			}
 		}
 	}
+	public Parcelle[][] getGrille(){
+		return this.grille;
+	}
 	
 	public Plateau(int taillex,int tailley,boolean graphique){
 		this(taillex,tailley);

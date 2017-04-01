@@ -15,7 +15,10 @@ public class Joueur {
 		this.equipe =	equipe;
 		this.vue 	= 	vue;
 	}
-	private ArrayList<Robot> getListeRobot(){
+	public int getEquipe(){
+		return equipe;
+	}
+	public ArrayList<Robot> getListeRobot(){
 		return listeRobot;
 	}
 	public void supprimerRobot(Robot robot){
