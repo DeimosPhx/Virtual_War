@@ -27,10 +27,10 @@ public class Menu {
 		 * on genere les obstacles selon le taux
 		 */
 		
-		Base b1 = new Base(new Coordonnees(0,0),1);
-		Base b2 = new Base(new Coordonnees(9,9),2);
-		plat.setBase(b1);
-		plat.setBase(b2);
+		/*Base b1 = new Base(new Coordonnees(0,0),1);
+		Base b2 = new Base(new Coordonnees(9,9),2);*/
+		/*plat.setBase(b1);
+		plat.setBase(b2);*/
 		return plat;
 	}
 	public boolean obstacleLigCol(Plateau plat){
@@ -81,12 +81,13 @@ public class Menu {
 	public boolean obstaclebase(Plateau plat, Coordonnees coord){
 		return (coord.getAbscisse()>4 && coord.getOrdonnee()>4 && (coord.getAbscisse()<(plat.getX()-3))&& (coord.getOrdonnee()<(plat.getY()-3)));  
 	}
-	public static void compo(Joueur j,Plateau plat){
-		int nbRobot = 0;
-		String nbRobot1 = JOptionPane.showInputDialog(null,"J"+j.getEquipe() + "\n entrez le nombre de robot souhaité : ");
-		nbRobot = Integer.valueOf(nbRobot1);
+	public static ArrayList<Robot> compo(Joueur j,Plateau plat){
+		//int nbRobot = 0;
+		//String nbRobot1 = JOptionPane.showInputDialog(null,"J"+j.getEquipe() + "\n entrez le nombre de robot souhaité : ");
+		//nbRobot = Integer.valueOf(nbRobot1);
+		JOptionPane.showMessageDialog(null, "J"+j.getEquipe()+": formez votre armée !");
 		ArrayList<Robot> armee = new ArrayList<Robot>();
-		for(int i=0; i<nbRobot; i++){
+		for(int i=0; i<3; i++){
 			boolean isOut;
 			do{
 				isOut = true;
@@ -112,7 +113,8 @@ public class Menu {
 					JOptionPane.showMessageDialog(null, "ERREUR ENTREE INVALIDE");
 					isOut = false;
 			}
-			}while(isOut);
+			}while(!isOut);
 		}
+		return armee;
 	}
 }

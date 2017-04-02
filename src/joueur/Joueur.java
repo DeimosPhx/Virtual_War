@@ -18,6 +18,15 @@ public class Joueur {
 	public int getEquipe(){
 		return equipe;
 	}
+	public Base getBase(){
+		return this.base;
+	}
+	public void setList(ArrayList<Robot> lst){
+		this.listeRobot = lst;
+	}
+	public Robot getRobot(int i){
+		return listeRobot.get(i);
+	}
 	public ArrayList<Robot> getListeRobot(){
 		return listeRobot;
 	}

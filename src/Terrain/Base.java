@@ -1,24 +1,43 @@
 package Terrain;
+import unite.*;
+import java.util.ArrayList;
 
 public class Base extends Parcelle{
-	private int equipe;
+	private ArrayList<Robot> lst;
 	public Base(Coordonnees cord){
 		super(cord);
-		equipe = 0;
+		super.equipe = 0;
+		lst = new ArrayList<Robot>();
+	}
+	public boolean estDans(Robot rob){
+		boolean in = false;
+		for(int i=0;i<lst.size();i++){
+			in = lst.get(i).equals(rob);
+		}
+		return in;
+	}
+	public void setList(ArrayList<Robot> list){
+		this.lst = list;
+	}
+	public void addRobot(Robot rob){
+		lst.add(rob);
+	}
+	public void removeRobot(Robot rob){
+		lst.remove(rob);
 	}
 	public Base(Coordonnees cord,int equipe){
 		this(cord);
-		this.equipe = equipe;
+		super.equipe = equipe;
 	}
-	public String toString(){
-		if(equipe == 1){
+	/*public String toString(){
+		if(this.equipe == 1){
 			return "B";
 		}
-		else if(equipe == 2){
+		else if(this.equipe == 2){
 			return "b";
 		}
 		else{
 			return "ERROR";
 		}
-	}
+	}*/
 }
