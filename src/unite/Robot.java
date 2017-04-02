@@ -23,7 +23,13 @@ public abstract class Robot extends Parcelle {
 	abstract int getEnergieRecupEnBase();
 	abstract boolean tirer(Direction direction);
 	abstract boolean peutTirer(Direction direction);
-	abstract boolean subitDegatsEtMeurtPotentiellement(int degats);
+	public boolean subitDegatsEtMeurtPotentiellement(int degats) {
+		this.energie -= degats;
+		if(this.energie <= 0){
+			return true;
+		}
+		return false;
+	}
 	abstract void recuperationEnergie();
 	public int getAbscisse(){
 		return coordonnees.getAbscisse();
@@ -31,5 +37,9 @@ public abstract class Robot extends Parcelle {
 	public int getOrdonnee(){
 		return coordonnees.getOrdonnee();
 	}
+	public void setCordonnees(Coordonnees coordonnees){
+		this.coordonnees =  coordonnees;
+	}
 }
 	
+
