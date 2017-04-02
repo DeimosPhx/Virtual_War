@@ -83,19 +83,27 @@ public class Plateau{
 		 * coordonnees de la destination: this.grille[direc.getCoordonnees().getAbscisse()][direc.getCoordonnees().getOrdonnee()]
 		 */
 		Coordonnees cord_unit = rob.getCord();
-		this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = rob;
-		rob.deployer(new Coordonnees(cord_unit.cibler(direc.getCoordonnees()).getAbscisse(),cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()));
-		if(j.getBase().estDans(rob)){
-			j.getBase().removeRobot(rob);
-		}
-		
-		if(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] instanceof Base){
-			
+		if(cord_unit.cibler(direc.getCoordonnees()).getAbscisse() < 0 || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() < 0 || cord_unit.cibler(direc.getCoordonnees()).getAbscisse() > this.grille.length || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() > this.grille[0].length ){
+			/*
+			 * on ne fait rien car on sort du tableau
+			 */
 		}
 		else{
+			this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = rob;
+			rob.deployer(new Coordonnees(cord_unit.cibler(direc.getCoordonnees()).getAbscisse(),cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()));
+			if(j.getBase().estDans(rob)){
+				j.getBase().removeRobot(rob);
+			}
 			
-			this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(new Coordonnees(cord_unit.getAbscisse(),cord_unit.getOrdonnee()));
+			if(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] instanceof Base){
+				
+			}
+			else{
+				
+				this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(new Coordonnees(cord_unit.getAbscisse(),cord_unit.getOrdonnee()));
+			}
 		}
+		
 		
 	}
 	public boolean deplacer(Joueur j,Robot rob,Direction direc){
