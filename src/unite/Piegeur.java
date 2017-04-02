@@ -38,13 +38,6 @@ public class Piegeur extends Robot{
 		}
 		return false;
 	}
-	boolean subitDegatsEtMeurtPotentiellement(int degats) {
-		this.energie -= degats;
-		if(this.energie <= 0){
-			return true;
-		}
-		return false;
-	}
 	void recuperationEnergie() {
 		this.energie += this.getEnergieRecupEnBase();
 	}
