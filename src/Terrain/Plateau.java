@@ -7,7 +7,7 @@ import joueur.Vue;
 /*import javax.swing.*;
 import java.awt.*;*/
 /*
- * Ebauche de plateau graphique int�gr� au code.
+ * Ebauche de plateau graphique intï¿½grï¿½ au code.
  */
 public class Plateau{
 	//attributs
@@ -25,9 +25,6 @@ public class Plateau{
 				this.grille[i][j] = new Parcelle(new Coordonnees(i,j));
 			}
 		}
-	}
-	public Parcelle[][] getGrille(){
-		return this.grille;
 	}
 	
 	public Plateau(int taillex,int tailley,boolean graphique){
@@ -73,23 +70,30 @@ public class Plateau{
 	}
 	public boolean deplacer(Robot rob,Direction direc){
 		Coordonnees cord_unit = rob.getCord();
-		if(cord_unit.cibler(direc.getCoordonnees()).getAbscisse() < 0 || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() < 0 || cord_unit.cibler(direc.getCoordonnees()).getAbscisse() > this.grille.length || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() > this.grille[0].length){
-			/*
+		if(!estDans(cord_unit.cibler(direc.getCoordonnees()))){	
+		/*
 			 * destination: en dehors du plateau
 			 * effet: cancel deplacement
 			 * return: false
 			 */
 			return false;
 		}
-		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Base){
+		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()]
+				[cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] 
+						instanceof Base){
 			/*
 			 * destination: base
-			 * effet: ajout de l'unit� dans la liste de la Base
+			 * effet: ajout de l'unité dans la liste de la Base
 			 * return: true
 			 */
 			return true;
 		}
-		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Obstacle || this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Robot){
+		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()]
+				[cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] 
+						instanceof Obstacle 
+						|| this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()]
+								[cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] 
+										instanceof Robot){
 			/*
 			 * destination: Obstacle || Robot
 			 * effet: cancel deplacement 
@@ -97,15 +101,23 @@ public class Plateau{
 			 */
 			return false;
 		}
-		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Mine){
+		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()]
+				[cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()]
+						instanceof Mine){
 			/*
 			 * destination: Mine
 			 * effet: deplacement + explosion
 			 * return: true
 			 */
-			//faire explosion de la mine (CF antoine)
-			this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()];
-			this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()].vider();
+			//faire explosion de la mine (CF antoine) ~~done.
+			this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()]
+					   [cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] 
+					   = this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()];
+			this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(cord_unit);
+			rob.setCordonnees(cord_unit.cibler(direc.getCoordonnees()));
+			if(rob.subitDegatsEtMeurtPotentiellement(2)){
+				this.grille[rob.getAbscisse()][rob.getOrdonnee()] = new Parcelle(cord_unit);
+			}
 			return true;
 		}
 		else{
@@ -114,19 +126,22 @@ public class Plateau{
 			 *effet: deplacement
 			 *return: true
 			 */
-			this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()];
-			this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()].vider();
+			this.grille	[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()]
+						[cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] 
+						= this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()];
+			this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(cord_unit);
+			rob.setCordonnees(cord_unit.cibler(direc.getCoordonnees()));
 			return true;
 		}
 		/*
 		 * cible: this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()]
-		 * coordonnees unit�: this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()]
+		 * coordonnees unité: this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()]
 		 * coordonnees de la destination: this.grille[direc.getCoordonnees().getAbscisse()][direc.getCoordonnees().getOrdonnee()]
 		 */
 		
 	}
 	public boolean estDans(Coordonnees cord){
-		return this.tailleX < cord.getAbscisse() && this.tailleY < cord.getOrdonnee();
+		return this.tailleX > cord.getAbscisse() && this.tailleY > cord.getOrdonnee();
 	}
 	//ebauche graphique
 /*	public void afficher(String title){
