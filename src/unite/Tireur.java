@@ -61,14 +61,6 @@ public class Tireur extends Robot {
 		}
 		return 0;
 	}
-	
-	boolean subitDegatsEtMeurtPotentiellement(int degats) {
-		this.energie -= degats;
-		if(this.energie <= 0){
-			return true;
-		}
-		return false;
-	}
 	void recuperationEnergie() {
 		this.energie += this.getEnergieRecupEnBase();
 	}
