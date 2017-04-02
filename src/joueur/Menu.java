@@ -95,18 +95,18 @@ public class Menu {
 			
 			switch(selec){
 			case "CHAR": 
-				Char c1 = new Char(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*10, (j.getEquipe()-1)*10), plat);
+				Char c1 = new Char(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*9, (j.getEquipe()-1)*9), plat);
 				armee.add(c1);
 				/*
 				 * creer une unitée et l'ajouter à l'arraylist de la base du joueur (selon son equipe)
 				 */
 				break;
 			case "PIEGEUR":
-				Piegeur p1 = new Piegeur(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*10, (j.getEquipe()-1)*10), plat);
+				Piegeur p1 = new Piegeur(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*9, (j.getEquipe()-1)*9), plat);
 				armee.add(p1);
 				break;
 			case "TIREUR":
-				Tireur t1 = new Tireur(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*10, (j.getEquipe()-1)*10), plat);
+				Tireur t1 = new Tireur(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*9, (j.getEquipe()-1)*9), plat);
 				armee.add(t1);
 				break;
 				default:
