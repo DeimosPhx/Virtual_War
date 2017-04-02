@@ -5,7 +5,7 @@ import Terrain.*;
 import unite.*;
 
 public class Lancement {
-	
+
 	private final static String DEPLACER = "deplacer";
 	private final static String TIRER = "tirer";
 	private final static String POSER = "poser";
@@ -23,53 +23,58 @@ public class Lancement {
 	private final static String UNITE1 = "unite1";
 	private final static String UNITE2 = "unite2";
 	private final static String UNITE3 = "unite3";
-	
+
 	private static int askUnite(Joueur J) {
 		String reponseJoueur = "";
-		reponseJoueur = JOptionPane.showInputDialog("J"+J.getEquipe()+"Avec quelle unite veux-tu faire ton action ?\n UNITE1\n UNTIE2\n UNITE3");
-		if		(reponseJoueur.equals(UNITE1))	{return 1;}
-		else if	(reponseJoueur.equals(UNITE2))	{return 2;}
-		else if	(reponseJoueur.equals(UNITE3))	{return 3;}
-		
-		else{ JOptionPane.showInputDialog("Ca ne veut rien dire.");
+		reponseJoueur = JOptionPane.showInputDialog("J"+J.getEquipe()+"Avec quelle unite veux-tu faire ton action ?\n unite1\n unite2\n unite3");
+		while(true){
+			if		(reponseJoueur.equals(UNITE1))	{return 1;}
+			else if	(reponseJoueur.equals(UNITE2))	{return 2;}
+			else if	(reponseJoueur.equals(UNITE3))	{return 3;}
+
+			else{ JOptionPane.showInputDialog("Ca ne veut rien dire.");
+			}
 		}
-		return 0;
 	}
-	
+
 	private static int askActionTireurChar() {
 		String reponseJoueur = "";
 		reponseJoueur = JOptionPane.showInputDialog("Rentre ton action : se DEPLACER ou TIRER");
-		if		(reponseJoueur.equals(DEPLACER)){return 1;}
-		else if	(reponseJoueur.equals(TIRER))	{return 2;}
-		
-		else{ JOptionPane.showInputDialog("Ca ne veut rien dire.");
+		while(true){
+			if		(reponseJoueur.equals(DEPLACER)){return 1;}
+			else if	(reponseJoueur.equals(TIRER))	{return 2;}
+
+			else{ JOptionPane.showInputDialog("Ca ne veut rien dire.");
+			}
 		}
-		return 0;
 	}
-	
+
 	private static int askActionPiegeur() {
 		String reponseJoueur = "";
 		reponseJoueur = JOptionPane.showInputDialog("Rentre ton action : se DEPLACER ou POSER une mine");
-		if		(reponseJoueur.equals(DEPLACER)){return 1;}
-		else if	(reponseJoueur.equals(POSER))	{return 2;}
-		
-		else{ JOptionPane.showInputDialog("Ca ne veut rien dire.");
+		while(true){
+			if		(reponseJoueur.equals(DEPLACER)){return 1;}
+			else if	(reponseJoueur.equals(POSER))	{return 2;}
+
+			else{ JOptionPane.showInputDialog("Ca ne veut rien dire.");}
 		}
-		return 0;
 	}
-	
+
 	private static Direction askDirection4() {
 		String reponseJoueur = "";
 		reponseJoueur = JOptionPane.showInputDialog("Rentre ta direction : HAUT, BAS, GAUCHE, DROITE");
+		while(true){
 		if		(reponseJoueur.equals(HAUT))	{return Direction.HAUT;}
 		else if	(reponseJoueur.equals(BAS))		{return Direction.BAS;}
 		else if	(reponseJoueur.equals(GAUCHE))	{return Direction.GAUCHE;}
-		else 									{return Direction.DROITE;}
+		else if	(reponseJoueur.equals(DROITE))	{return Direction.DROITE;}
+		}
 	}
-	
+
 	private static Direction askDirection8(){
 		String reponseJoueur = "";
 		reponseJoueur = JOptionPane.showInputDialog("Rentre ta direction : HAUT, BAS, GAUCHE, DROITE, HAUTGAUCHE, HAUTDROITE, BASGAUCHE, BASDROITE");
+		while(true){
 		if		(reponseJoueur.equals(HAUT))		{return Direction.HAUT;}
 		else if	(reponseJoueur.equals(BAS))			{return Direction.BAS;}
 		else if	(reponseJoueur.equals(GAUCHE))		{return Direction.GAUCHE;}
@@ -77,11 +82,12 @@ public class Lancement {
 		else if	(reponseJoueur.equals(HAUTGAUCHE))	{return Direction.HAUT_GAUCHE;}
 		else if	(reponseJoueur.equals(HAUTDROITE))	{return Direction.HAUT_DROITE;}
 		else if	(reponseJoueur.equals(BASGAUCHE))	{return Direction.BAS_GAUCHE;}
-		else										{return Direction.BAS_DROITE;}
+		else if (reponseJoueur.equals(BASDROITE))	{return Direction.BAS_DROITE;}
+		}
 	}
-	
+
 	public static void main(String args[]) {
-		
+
 		boolean j1aperdu = false, tourJoueur1 = true,j2aperdu = false;
 		int reponseUnite = 0; 
 		int reponseAction = 0; 
@@ -116,7 +122,7 @@ public class Lancement {
 		plateau.setRobot(tireur2);
 		plateau.setRobot(piegeur1);
 		plateau.setRobot(piegeur2);*/
-		
+
 		J1.setList(Menu.compo(J1, plat));
 		J2.setList(Menu.compo(J2, plat));
 		B1.setList(J1.getListeRobot());
@@ -147,7 +153,7 @@ public class Lancement {
 				}
 				break;
 			}
-			
+
 			/*
 			 * TOUR DE J2
 			 */
@@ -174,7 +180,7 @@ public class Lancement {
 		}
 		/*
 		 * while ( !J1.Aperdu() && !J2.Aperdu()) {
-		 
+
 			System.out.println(plat);
 			if ( tourJoueur1 ) {
 				System.out.println("Tour du J1");
@@ -184,7 +190,7 @@ public class Lancement {
 						if ( reponseAction == 1 ) {
 							reponseDirection = askDirection4();
 							if ( J1.getRobot(0).peutTirer(reponseDirection) ) {
-								
+
 								plat.deplacer(J1.getRobot(1), reponseDirection);
 								tourJoueur1 = false;
 							}
@@ -202,7 +208,7 @@ public class Lancement {
 						if ( reponseAction == 1 ) {
 							reponseDirection = askDirection8();
 							if ( J1.getRobot(2).peutTirer(reponseDirection) ) {
-								
+
 								plat.deplacer(J1.getRobot(2), reponseDirection);
 								tourJoueur1 = false;
 							}
@@ -220,7 +226,7 @@ public class Lancement {
 						if ( reponseAction == 1 ) {
 							reponseDirection = askDirection8();
 							if ( J1.getRobot(3).peutTirer(reponseDirection) ) {
-								
+
 								plat.deplacer(J1.getRobot(3), reponseDirection);
 								tourJoueur1 = false;
 							}
@@ -244,7 +250,7 @@ public class Lancement {
 						if ( reponseAction == 1 ) {
 							reponseDirection = askDirection4();
 							if ( J2.getRobot(1).peutTirer(reponseDirection) ) {
-								
+
 								plat.deplacer(J2.getRobot(1), reponseDirection);
 								tourJoueur1 = true;
 							}
@@ -262,7 +268,7 @@ public class Lancement {
 						if ( reponseAction == 1 ) {
 							reponseDirection = askDirection8();
 							if ( J2.getRobot(2).peutTirer(reponseDirection) ) {
-								
+
 								plat.deplacer(J2.getRobot(2), reponseDirection);
 								tourJoueur1 = true;
 							}
@@ -280,7 +286,7 @@ public class Lancement {
 						if ( reponseAction == 1 ) {
 							reponseDirection = askDirection8();
 							if ( J2.getRobot(3).peutTirer(reponseDirection) ) {
-							
+
 								plat.deplacer(J2.getRobot(3), reponseDirection);
 								tourJoueur1 = true;
 							}
@@ -297,9 +303,9 @@ public class Lancement {
 					J2.Aperdu();
 				}
 				}*/
-			
-			
-		
+
+
+
 		/*
 		while(!gagner){
 			if(tourJoueur){
@@ -408,8 +414,8 @@ public class Lancement {
 				tourJoueur = false;
 				terrain.updateUI();
 			}
-			*/
-		
+		 */
+
 	}
 
 }
