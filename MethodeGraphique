@@ -1,0 +1,48 @@
+Tableau doit hérité de JPanel !
+Ces methodes n'affiche que de des cases vides ou un char, elle est donc a compléter.
+dans le main, on utilisera updateUI entre chaque tour.
+
+
+Dans tableau :
+	private static Map<String,ImageIcon> images= new HashMap<>();
+	private static final int tailleParcelle=new ImageIcon("images/Herbe.png").getIconHeight();
+
+
+
+	public Plateau(int taillex,int tailley){
+		this.grille = new Parcelle[taillex][tailley];
+		this.tailleX = taillex;
+		this.tailleY = tailley;
+		this.graphique = false;
+		images.put("herbe",new ImageIcon("images/Herbe.png"));
+		images.put("char",new ImageIcon("images/Char.png"));
+		for(int i=0;i<taillex;i++){
+			for(int j=0;j<tailley;j++){
+				this.grille[i][j] = new Parcelle(new Coordonnees(i,j));
+			}
+		}
+		Frame f = new Frame("Terrain");
+		f.setBounds(0,100, tailleParcelle*tailleX, tailleParcelle*tailleY);
+		f.add(this);
+		// Fermeture de la fenêtre
+		f.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e)  {System.exit(0);}
+		});
+		// Affichage de la fenêtre
+		f.setVisible(true);
+
+	}
+  
+  
+	public void paint(Graphics g) {
+		for (int x=0; x<tailleX; x++){
+			for (int y=0; y<tailleY; y++){ 
+				if (this.grille[x][y] instanceof Char) {
+					g.drawImage(images.get("char").getImage(),x*tailleParcelle,y*tailleParcelle,null);
+				}
+				else {
+					g.drawImage(images.get("herbe").getImage(),x*tailleParcelle,y*tailleParcelle,null);
+				}
+			}
+		}
+	}
