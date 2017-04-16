@@ -11,25 +11,28 @@ public abstract class Robot extends Parcelle {
 		super(cord);
 	}
 	int energie;
-	Coordonnees coordonnees;
 	Plateau plateau;
 	
-	abstract int getEnergie();
-	abstract int getDegat();
-	abstract int getPortee();
-	abstract int getDeplacement();
-	abstract int getCout();
-	abstract int getCoutAvancer();
-	abstract int getEnergieRecupEnBase();
-	abstract boolean tirer(Direction direction);
-	abstract boolean peutTirer(Direction direction);
-	abstract boolean subitDegatsEtMeurtPotentiellement(int degats);
-	abstract void recuperationEnergie();
+	public void deployer(Coordonnees cord){
+		super.cord = cord;
+	}
+	public abstract int getEnergie();
+	public abstract int getDegat();
+	public abstract int getPortee();
+	public abstract int getDeplacement();
+	public abstract int getCout();
+	public abstract int getCoutAvancer();
+	public abstract int getEnergieRecupEnBase();
+	public abstract boolean tirer(Direction direction);
+	public abstract boolean peutTirer(Direction direction);
+	public abstract boolean subitDegatsEtMeurtPotentiellement(int degats);
+	public abstract void recuperationEnergie();
+	public abstract String toString();
 	public int getAbscisse(){
-		return coordonnees.getAbscisse();
+		return super.cord.getAbscisse();
 	}
 	public int getOrdonnee(){
-		return coordonnees.getOrdonnee();
+		return super.cord.getOrdonnee();
 	}
 }
 	
