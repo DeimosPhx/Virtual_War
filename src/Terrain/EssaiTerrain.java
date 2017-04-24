@@ -2,9 +2,13 @@ package Terrain;
 
 
 
+import java.util.ArrayList;
+
+import joueur.Joueur;
 import joueur.Menu;
 import joueur.Vue;
 import unite.Piegeur;
+import unite.Robot;
 import unite.Tireur;
 
 public class EssaiTerrain {
@@ -13,6 +17,9 @@ public class EssaiTerrain {
 		Plateau terrain = new Plateau(10,10);
 		Vue vue = new Vue(1, terrain);
 		Vue vue2 = new Vue(2, terrain);
+		ArrayList<Robot> testList = new ArrayList<Robot>();
+		Joueur j2= new Joueur(2);
+		j2.setList(testList);
 		terrain.setBase(new Base(new Coordonnees(0,0),1));
 		terrain.setBase(new Base(new Coordonnees(9,9),1));
 		terrain.setObstacle(new Coordonnees(5,5));
@@ -27,6 +34,9 @@ public class EssaiTerrain {
 		Tireur tireur2 = new Tireur(2, new Coordonnees(5, 8), terrain);
 		terrain.setRobot(tireur1);
 		terrain.setRobot(tireur2);
+		testList.add(tireur2);
+		tireur2.subitDegatsEtMeurtPotentiellement(38);
+		System.out.println(tireur2.getEnergie());
 		if(tireur1.peutTirer(Direction.DROITE)){
 			System.out.println("Bon");
 			tireur1.tirer(Direction.DROITE);
@@ -34,10 +44,20 @@ public class EssaiTerrain {
 		if(tireur1.peutTirer(Direction.GAUCHE)){
 			System.out.println("PAS BON !");
 		}
+		Robot aSupprimer = null;
+		for(Robot r : j2.getListeRobot()){
+			if(r.getEnergie()<=0){
+				aSupprimer = r;
+			}
+		}
 		System.out.println(terrain);
 		System.out.println(vue);
 		System.out.println(vue2);
-		System.out.println(tireur2.getEnergie());
+		j2.getListeRobot().remove(aSupprimer);
+		terrain.getGrille()[aSupprimer.getAbscisse()][aSupprimer.getOrdonnee()]=new Parcelle(aSupprimer.getCord());
+		System.out.println("le robot t bien supprimé :");
+		System.out.println(terrain);
+		//System.out.println(tireur2.getEnergie());
 	}
 	
 	
