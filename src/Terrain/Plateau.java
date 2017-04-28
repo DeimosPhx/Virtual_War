@@ -172,7 +172,7 @@ public class Plateau extends JPanel{
 		 * coordonnees de la destination: this.grille[direc.getCoordonnees().getAbscisse()][direc.getCoordonnees().getOrdonnee()]
 		 */
 		Coordonnees cord_unit = rob.getCord();
-		if(cord_unit.cibler(direc.getCoordonnees()).getAbscisse() < 0 || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() < 0 || cord_unit.cibler(direc.getCoordonnees()).getAbscisse() > this.grille.length || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() > this.grille[0].length ){
+		if(!this.estDans(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()].getCord().cibler(direc.getCoordonnees()))){
 			/*
 			 * on ne fait rien car on sort du tableau
 			 */
