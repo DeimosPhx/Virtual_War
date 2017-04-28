@@ -111,6 +111,9 @@ public class Lancement {
 		int selecUnit,selecAction;
 		Direction selecDirec;
 		while(!j1aperdu && !j2aperdu){
+			//ON AFFICHE LE GRAPHIQUE
+			plat.updateUI();
+
 			/*
 			 * TOUR DE J1
 			 */
@@ -158,7 +161,8 @@ public class Lancement {
 					break;
 				}
 			}while(!isOut);
-
+			
+			
 
 			/*
 			 * ON SUPPRIME LES ROBOTS MORTS (RIP)
@@ -187,6 +191,9 @@ public class Lancement {
 					plat.getGrille()[robotMort.getAbscisse()][robotMort.getOrdonnee()]=new Parcelle(robotMort.getCord());
 				}
 			}while(robotMort != null);
+			
+			//ON AFFICHE LE GRAPHIQUE
+			plat.updateUI();
 
 			/*
 			 * TOUR DE J2
@@ -230,6 +237,30 @@ public class Lancement {
 					break;
 				}
 			}while(!isOut);
+			do{
+				robotMort = null;
+				for(Robot r : J1.getListeRobot()){
+					if(r.getEnergie()<=0){
+						robotMort = r;
+					}
+				}
+				if(robotMort != null){
+					J1.getListeRobot().remove(robotMort);
+					plat.getGrille()[robotMort.getAbscisse()][robotMort.getOrdonnee()]=new Parcelle(robotMort.getCord());
+				}
+			}while(robotMort != null);
+			do{
+				robotMort = null;
+				for(Robot r : J2.getListeRobot()){
+					if(r.getEnergie()<=0){
+						robotMort = r;
+					}
+				}
+				if(robotMort !=null){
+					J2.getListeRobot().remove(robotMort);
+					plat.getGrille()[robotMort.getAbscisse()][robotMort.getOrdonnee()]=new Parcelle(robotMort.getCord());
+				}
+			}while(robotMort != null);
 		}
 	}
 
