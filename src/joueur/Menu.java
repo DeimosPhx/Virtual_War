@@ -173,25 +173,43 @@ public class Menu extends Application{
 		//CE IF PERMET DE DETERMINER CE QUE LE MENU DOIT AFFICHER
 		//EN L OCCURENCE LA CREATION DE COMPO
 		if(initialisation){
+			gc.setStroke(Color.BLACK);
 			gc.clearRect(0, 0, 300, 300);
-			gc.drawImage(images.get("char"), 50, 50);
-			gc.drawImage(images.get("piegeur"), 200, 50);
-			gc.drawImage(images.get("tireur"), 350, 50);
+			gc.drawImage(images.get("char"), 20, 50);
+			gc.drawImage(images.get("piegeur"), 115, 50);
+			gc.drawImage(images.get("tireur"), 215, 50);
 			gc.setStroke(Color.BLACK);
 			//DESSIN DES CARRES
-			gc.strokeRect(50,150, 30,30);
-			gc.strokeRect(80,150, 30,30);
+			gc.strokeRect(00,150, 30,30);
+			gc.strokeRect(30,150, 30,30);
+			gc.strokeRect(60,150, 30,30);
+			
 			gc.strokeRect(110,150, 30,30);
+			gc.strokeRect(140,150, 30,30);
+			gc.strokeRect(170,150, 30,30);
+
+			gc.strokeRect(110+110,150, 30,30);
+			gc.strokeRect(140+110,150, 30,30);
+			gc.strokeRect(170+110,150, 30,30);
 			//DESSIN DU NOMBRE
-			gc.fillText("0", 90, 170);
+			gc.fillText("0", 40, 170);
+			gc.fillText("0", 150, 170);
+			gc.fillText("0", 150+110, 170);
+
 			//PLUS
-			gc.fillRect(63,150, 3,30);
-			gc.fillRect(50,164, 30,3);
-			//MOINS
+			gc.fillRect(13,150, 3,30);
+			gc.fillRect(00,164, 30,3);
+			
+			gc.fillRect(123,150, 3,30);
 			gc.fillRect(110,164, 30,3);
+			
+			gc.fillRect(123+110,150, 3,30);
+			gc.fillRect(110+110,164, 30,3);
 
-
-
+			//MOINS
+			gc.fillRect(60,164, 30,3);
+			gc.fillRect(170,164, 30,3);			
+			gc.fillRect(170+110,164, 30,3);
 		}
 	}
 
