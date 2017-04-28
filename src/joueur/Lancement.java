@@ -227,6 +227,9 @@ public class Lancement {
 				case 1:
 					//deplacement
 					isOut = plat.deplacerTest(J2,J2.getRobot(selecUnit-1), selecDirec);
+					if(J2.getRobot(selecUnit-1) instanceof Char){
+						plat.deplacerTest(J2,J2.getRobot(selecUnit-1), selecDirec);
+					}
 					break;
 				case 2:
 					//tire
