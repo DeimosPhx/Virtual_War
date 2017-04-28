@@ -54,31 +54,34 @@ public class Menu extends Application{
 		Plateau plat = new Plateau(10,10);		
 		return plat;
 	}
+	
 	public static void setObstacle(Plateau ter,Joueur j1,Joueur j2){
 		/*
 		 * on genere les obstacles selon le taux
 		 * en s'assurant qu'il existe un chemin d'une base a l'autre
 		 */
 		Parcelle[][] plat = ter.getGrille();
-		String taux = JOptionPane.showInputDialog(null,"Taux d'obstacles : ");
-		int tx = Integer.valueOf(taux);
-		//plateau de 100case (10*10)
-		//EZ taux
-		Random rnd = new Random();
-		boolean isOut = false;
-		for(int i=0;i<tx;i++){
-			do{
-				isOut = false;
-				int x = rnd.nextInt(9);
-				int y = rnd.nextInt(9);
-				if((x!=j1.getBase().getCord().getAbscisse() && y!=j1.getBase().getCord().getOrdonnee()) 
-						&& (x!=j2.getBase().getCord().getAbscisse() && y!=j2.getBase().getCord().getOrdonnee())
-						&& (x!=j1.getBase().getCord().getAbscisse()+1 && y!=j1.getBase().getCord().getOrdonnee()+1)
-						&& (x!=j2.getBase().getCord().getAbscisse()+1 && y!=j2.getBase().getCord().getOrdonnee()+1)){
-					plat[x][y] = new Obstacle(new Coordonnees(x,y));
-					isOut = true;
-				}
-			}while(!isOut);
+        String taux = JOptionPane.showInputDialog(null,"Taux d'obstacles : ");
+        int tx = Integer.valueOf(taux);
+        //plateau de 100case (10*10)
+        //EZ taux
+        Random rnd = new Random();
+        boolean isOut = false;
+        for(int i=0;i<tx;i++){
+        	do{
+        		isOut = false;
+        		int x = rnd.nextInt(9);
+            	int y = rnd.nextInt(9);
+	        	/*if((x!=j1.getBase().getCord().getAbscisse() && y!=j1.getBase().getCord().getOrdonnee()) 
+	        			&& (x!=j2.getBase().getCord().getAbscisse() && y!=j2.getBase().getCord().getOrdonnee())
+	        			&& (x!=j1.getBase().getCord().getAbscisse()+1 && y!=j1.getBase().getCord().getOrdonnee()+1)
+	        			&& (x!=j2.getBase().getCord().getAbscisse()+1 && y!=j2.getBase().getCord().getOrdonnee()+1))*/
+            	if(plat[x][y].autoriserPlacementObstacle(ter,new Coordonnees(x,y))){
+	        		plat[x][y] = new Obstacle(new Coordonnees(x,y));
+	        		plat[x][y].setPasVide();
+	        		isOut = true;
+	        	}
+        	     }while(!isOut);
 		}
 	}
 
