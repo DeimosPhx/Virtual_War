@@ -9,14 +9,14 @@ public class Menu {
 	/*
 	 * Objectifs:
 	 * 	acceuillir le joueur
-	 *  on fait composer les équipes des 2 joueurs
+	 *  on fait composer les Ã©quipes des 2 joueurs
 	 *  ??
 	 */
 	
 	/*	showInputDialog(null,String message);
 	 * BESOINS:
 	 * 	compo #arraylist
-	 *  créer base avec compo #return base
+	 *  crÃ©er base avec compo #return base
 	 *  generateur terrain #return terrain
 	 */
 	public static Plateau acceuil(){
@@ -48,6 +48,7 @@ public class Menu {
 	        			&& (x!=j1.getBase().getCord().getAbscisse()+1 && y!=j1.getBase().getCord().getOrdonnee()+1)
 	        			&& (x!=j2.getBase().getCord().getAbscisse()+1 && y!=j2.getBase().getCord().getOrdonnee()+1)){
 	        		plat[x][y] = new Obstacle(new Coordonnees(x,y));
+				plat[x][y].setPasVide();
 	        		isOut = true;
 	        	}
         	}while(!isOut);
@@ -82,7 +83,7 @@ public class Menu {
 		Coordonnees actuel = new Coordonnees(0,0);
 		//Pour savoir si la coordonnees actuel ne descend pas en dessous du tableau
 		while(plat.estDans(new Coordonnees(actuel.getAbscisse()+1,actuel.getOrdonnee()))){
-			//Pour savoir si la case en diagonale à droite sera encore dans le tableau
+			//Pour savoir si la case en diagonale Ã  droite sera encore dans le tableau
 			while(plat.estDans(new Coordonnees((actuel.getAbscisse()-1),actuel.getOrdonnee()+1))){
 				actuel = new Coordonnees(actuel.getAbscisse()-1,actuel.getOrdonnee()+1);
 				int cpt=0;
@@ -104,9 +105,9 @@ public class Menu {
 	}
 	public static ArrayList<Robot> compo(Joueur j,Plateau plat){
 		//int nbRobot = 0;
-		//String nbRobot1 = JOptionPane.showInputDialog(null,"J"+j.getEquipe() + "\n entrez le nombre de robot souhaité : ");
+		//String nbRobot1 = JOptionPane.showInputDialog(null,"J"+j.getEquipe() + "\n entrez le nombre de robot souhaitÃ© : ");
 		//nbRobot = Integer.valueOf(nbRobot1);
-		JOptionPane.showMessageDialog(null, "J"+j.getEquipe()+": formez votre armée !");
+		JOptionPane.showMessageDialog(null, "J"+j.getEquipe()+": formez votre armÃ©e !");
 		ArrayList<Robot> armee = new ArrayList<Robot>();
 		for(int i=0; i<3; i++){
 			boolean isOut;
@@ -119,7 +120,7 @@ public class Menu {
 				Char c1 = new Char(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*9, (j.getEquipe()-1)*9), plat);
 				armee.add(c1);
 				/*
-				 * creer une unitée et l'ajouter à l'arraylist de la base du joueur (selon son equipe)
+				 * creer une unitÃ©e et l'ajouter Ã  l'arraylist de la base du joueur (selon son equipe)
 				 */
 				break;
 			case "PIEGEUR":
