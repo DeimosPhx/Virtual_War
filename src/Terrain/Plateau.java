@@ -31,6 +31,8 @@ public class Plateau extends JPanel{
 	private static Map<String,ImageIcon> images= new HashMap<>();
 	private static final int tailleParcelle=50;
 	private Random r = new Random();
+	//CHANGEMENT
+	private boolean tourJ1 = true;
 	//constructors
 
 	public Plateau(int taillex,int tailley){
@@ -68,6 +70,8 @@ public class Plateau extends JPanel{
 
 	}
 	public void paint(Graphics g) {
+		//CHANGEMENT
+		tourJ1=!tourJ1;
 		for (int x=0; x<tailleX; x++){
 			for (int y=0; y<tailleY; y++){ 
 				if 	   (this.grille[x][y] instanceof Char) {
@@ -97,14 +101,18 @@ public class Plateau extends JPanel{
 						g.drawImage(images.get("2tireur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 				}
+				//CHANGEMENT
 				else if(this.grille[x][y] instanceof Mine) {
-					if(this.grille[x][y].getEquipe()==1){
-						g.drawImage(images.get("1mine").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-					else{
-						g.drawImage(images.get("2mine").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-				}
+                    if(this.grille[x][y].getEquipe()==1 && tourJ1){
+                        g.drawImage(images.get("1mine").getImage(),xtailleParcelle,ytailleParcelle,null);
+                    }
+                    else if(this.grille[x][y].getEquipe()==2 && !tourJ1){
+                        g.drawImage(images.get("2mine").getImage(),xtailleParcelle,ytailleParcelle,null);
+                    }
+                    else{
+                        g.drawImage(images.get("herbe").getImage(),xtailleParcelle,ytailleParcelle,null);
+                    }
+					//CHANGEMENT
 				else if(this.grille[x][y] instanceof Piegeur) {
 					if(this.grille[x][y].getEquipe()==1){
 						g.drawImage(images.get("1piegeur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
