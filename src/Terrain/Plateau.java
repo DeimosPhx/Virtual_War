@@ -70,51 +70,49 @@ public class Plateau extends JPanel{
 
 	}
 	public void paint(Graphics g) {
-		//CHANGEMENT
-		tourJ1=!tourJ1;
+		tourJ1 = !tourJ1;
 		for (int x=0; x<tailleX; x++){
 			for (int y=0; y<tailleY; y++){ 
-				if 	   (this.grille[x][y] instanceof Char) {
-					if(this.grille[x][y].getEquipe()==1){
+				if 	  (this.grille[y][x] instanceof Char) {
+					if(this.grille[y][x].getEquipe()==1){
 						g.drawImage(images.get("1char").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 					else{
 						g.drawImage(images.get("2char").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 				}
-				else if(this.grille[x][y] instanceof Obstacle) {
-						g.drawImage(images.get("1obstacle").getImage(),x*tailleParcelle,y*tailleParcelle,null);
+				else if(this.grille[y][x] instanceof Obstacle) {
+					g.drawImage(images.get("1obstacle").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 				}
-				else if(this.grille[x][y] instanceof Base) {
-					if(this.grille[x][y].getEquipe()==1){
+				else if(this.grille[y][x] instanceof Base) {
+					if(this.grille[y][x].getEquipe()==1){
 						g.drawImage(images.get("1base").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 					else{
 						g.drawImage(images.get("2base").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 				}
-				else if(this.grille[x][y] instanceof Tireur) {
-					if(this.grille[x][y].getEquipe()==1){
+				else if(this.grille[y][x] instanceof Tireur) {
+					if(this.grille[y][x].getEquipe()==1){
 						g.drawImage(images.get("1tireur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 					else{
 						g.drawImage(images.get("2tireur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 				}
-				//CHANGEMENT
-				else if(this.grille[x][y] instanceof Mine) {
-                    if(this.grille[x][y].getEquipe()==1 && tourJ1){
-                        g.drawImage(images.get("1mine").getImage(),xtailleParcelle,ytailleParcelle,null);
-                    }
-                    else if(this.grille[x][y].getEquipe()==2 && !tourJ1){
-                        g.drawImage(images.get("2mine").getImage(),xtailleParcelle,ytailleParcelle,null);
-                    }
-                    else{
-                        g.drawImage(images.get("herbe").getImage(),xtailleParcelle,ytailleParcelle,null);
-                    }
-					//CHANGEMENT
-				else if(this.grille[x][y] instanceof Piegeur) {
-					if(this.grille[x][y].getEquipe()==1){
+				else if(this.grille[y][x] instanceof Mine) {
+					if(this.grille[y][x].getEquipe()==1 && tourJ1){
+						g.drawImage(images.get("1mine").getImage(),x*tailleParcelle,y*tailleParcelle,null);
+					}
+					else if(this.grille[y][x].getEquipe()==2 && !tourJ1){
+						g.drawImage(images.get("2mine").getImage(),x*tailleParcelle,y*tailleParcelle,null);
+					}
+					else{
+						g.drawImage(images.get("herbe").getImage(),x*tailleParcelle,y*tailleParcelle,null);
+					}
+				}
+				else if(this.grille[y][x] instanceof Piegeur) {
+					if(this.grille[y][x].getEquipe()==1){
 						g.drawImage(images.get("1piegeur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 					else{
