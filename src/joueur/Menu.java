@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import unite.*;
 import Terrain.*;
 import javafx.application.Application;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -32,9 +33,16 @@ public class Menu extends Application{
 	 *  ??
 	 */
 
-	private ArrayList<Robot> compo = new ArrayList<Robot>();
+	private ArrayList<Robot> compoJ1 = new ArrayList<Robot>();
+	private ArrayList<Robot> compoJ2 = new ArrayList<Robot>();
 	private static Map<String,Image> images = new HashMap<>();
 	private boolean initialisation = true;
+	private int nbUnits;
+	private ArrayList<Rectangle> plus = new ArrayList<Rectangle>();
+	private ArrayList<Rectangle> moin = new ArrayList<Rectangle>();
+	private int chars = 0;
+	private int tireurs = 0;
+	private int piegeurs = 0;
 
 	/*	showInputDialog(null,String message);
 	 * BESOINS:
@@ -43,9 +51,18 @@ public class Menu extends Application{
 	 *  generateur terrain #return terrain
 	 */
 	public Menu(){
+		nbUnits=0;
 	}
-	public ArrayList<Robot> getComp(){
-		return compo;
+	public ArrayList<Robot> getComp(Joueur j){
+		if(j.getEquipe()==1){
+			return compoJ1;
+		}
+		else if(j.getEquipe()==2){
+			return compoJ2;
+		}
+		else{
+			return null;
+		}
 	}
 	public static Plateau acceuil(){
 		/* JOptionPane pour dire bonjour */
@@ -169,51 +186,73 @@ public class Menu extends Application{
 		}
 		return armee;
 	}	
+	public void ask_nb_units(){
+		String rep = "";
+		boolean out = false;
+		do{
+			rep = JOptionPane.showInputDialog("Nombre d'unitées par équipe :");
+			if(rep.matches("^\\p{Digit}+$")){
+				this.nbUnits = Integer.valueOf(rep);
+				out = true;
+			}
+		}while(!out);
+		///!\ DEBUG /!\
+		//JOptionPane.showMessageDialog(null, rep+"  "+this.nbUnits);
+	}
 	private void draw(GraphicsContext gc){
+		//placement des images
+		gc.setStroke(Color.BLACK);
+		gc.clearRect(0, 0, 300, 300);
+		gc.drawImage(images.get("char"), 20, 50);
+		gc.drawImage(images.get("piegeur"), 115, 50);
+		gc.drawImage(images.get("tireur"), 215, 50);
+		gc.setStroke(Color.BLACK);
+		//DESSIN DES CARRES
+		gc.strokeRect(00,150, 30,30);
+		gc.strokeRect(30,150, 30,30);
+		gc.strokeRect(60,150, 30,30);
+		
+		gc.strokeRect(110,150, 30,30);
+		gc.strokeRect(140,150, 30,30);
+		gc.strokeRect(170,150, 30,30);
+
+		gc.strokeRect(110+110,150, 30,30);
+		gc.strokeRect(140+110,150, 30,30);
+		gc.strokeRect(170+110,150, 30,30);
+		//DESSIN DES NOMBRES
+		gc.fillText(""+chars, 40, 170);
+		gc.fillText(""+piegeurs, 150, 170);
+		gc.fillText(""+tireurs, 150+110, 170);
+
+		//PLUS
+		gc.fillRect(13,150, 3,30);
+		gc.fillRect(00,164, 30,3);
+		
+		gc.fillRect(123,150, 3,30);
+		gc.fillRect(110,164, 30,3);
+		
+		gc.fillRect(123+110,150, 3,30);
+		gc.fillRect(110+110,164, 30,3);
+
+		//MOINS
+		gc.fillRect(60,164, 30,3);
+		gc.fillRect(170,164, 30,3);			
+		gc.fillRect(170+110,164, 30,3);
 		//CE IF PERMET DE DETERMINER CE QUE LE MENU DOIT AFFICHER
 		//EN L OCCURENCE LA CREATION DE COMPO
 		if(initialisation){
-			gc.setStroke(Color.BLACK);
-			gc.clearRect(0, 0, 300, 300);
-			gc.drawImage(images.get("char"), 20, 50);
-			gc.drawImage(images.get("piegeur"), 115, 50);
-			gc.drawImage(images.get("tireur"), 215, 50);
-			gc.setStroke(Color.BLACK);
-			//DESSIN DES CARRES
-			gc.strokeRect(00,150, 30,30);
-			gc.strokeRect(30,150, 30,30);
-			gc.strokeRect(60,150, 30,30);
-			
-			gc.strokeRect(110,150, 30,30);
-			gc.strokeRect(140,150, 30,30);
-			gc.strokeRect(170,150, 30,30);
-
-			gc.strokeRect(110+110,150, 30,30);
-			gc.strokeRect(140+110,150, 30,30);
-			gc.strokeRect(170+110,150, 30,30);
-			//DESSIN DU NOMBRE
-			gc.fillText("0", 40, 170);
-			gc.fillText("0", 150, 170);
-			gc.fillText("0", 150+110, 170);
-
-			//PLUS
-			gc.fillRect(13,150, 3,30);
-			gc.fillRect(00,164, 30,3);
-			
-			gc.fillRect(123,150, 3,30);
-			gc.fillRect(110,164, 30,3);
-			
-			gc.fillRect(123+110,150, 3,30);
-			gc.fillRect(110+110,164, 30,3);
-
-			//MOINS
-			gc.fillRect(60,164, 30,3);
-			gc.fillRect(170,164, 30,3);			
-			gc.fillRect(170+110,164, 30,3);
+			plus.add(new Rectangle(0,150,30,30));
+			plus.add(new Rectangle(110,150,30,30));
+			plus.add(new Rectangle(220,150,30,30));
+			moin.add(new Rectangle(60,150,30,30));
+			moin.add(new Rectangle(170,150,30,30));
+			moin.add(new Rectangle(280,150,30,30));
+			initialisation = false;
 		}
 	}
 
 	public void start(Stage stage) {
+		
 		VBox root = new VBox();
 		Canvas canvas = new Canvas (500, 200);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -221,6 +260,29 @@ public class Menu extends Application{
 		images.put("piegeur"	,new Image("piegeur.png"));
 		images.put("char"		,new Image("char.png"	));
 		draw(gc);
+		canvas.setOnMouseClicked(e -> {
+			Rectangle selected;
+			boolean doIt = false;
+    		for(Rectangle r : plus){
+    			if(r.contains(new Point2D(e.getSceneX(),e.getSceneY()))){
+    				selected = r;
+    				doIt = true;
+    			}
+    		}
+    		if(doIt){
+    			
+    			
+    		}
+    		for(Rectangle r : moin){
+    			if(r.contains(new Point2D(e.getSceneX(),e.getSceneY()))){
+    				selected = r;
+    				doIt = true;
+    			}
+    		}
+    		if(doIt){
+    			
+    		}
+		});
 		root.getChildren().add(canvas);
 		Scene scene = new Scene(root);
 		stage.setTitle("Hello Paint");
