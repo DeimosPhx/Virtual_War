@@ -168,13 +168,13 @@ public class Plateau extends JPanel{
 	public void setMine(Coordonnees cord, Mine mine){
 		grille[cord.getAbscisse()][cord.getOrdonnee()] = mine;
 	}
-	public boolean deplacerTest(Joueur j,Robot rob,Direction direc){
+public boolean deplacerTest(Joueur j,Robot rob,Direction direc){
 		/*
 		 * test de deplacement simple
 		 */
 		/*
 		 * cible: this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()]
-		 * coordonnees unitï¿½: this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()]
+		 * coordonnees unit�: this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()]
 		 * coordonnees de la destination: this.grille[direc.getCoordonnees().getAbscisse()][direc.getCoordonnees().getOrdonnee()]
 		 */
 		Coordonnees cord_unit = rob.getCord();
@@ -189,37 +189,27 @@ public class Plateau extends JPanel{
 			 * on ne fait rien car on rencontre un obstacle ou un robot
 			 */
 			return false;
-
-		}
-		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Base){
-			//on entre dans la base
-			j.getBase().addRobot(rob);
-			this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = j.getBase();
-			this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(new Coordonnees(cord_unit.getAbscisse(),cord_unit.getOrdonnee()));
-			return true;
 		}
 		else{
-			
-			if(j.getBase().estDans(rob)){
-				System.out.println("est bien rentre");
-				//j.getBase().removeRobot(rob);
-			}
-
-			if(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] instanceof Base){
-				j.getBase().removeRobot(rob);
-				
+			if(!(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Base)){
+				this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = rob;
+				rob.deployer(new Coordonnees(cord_unit.cibler(direc.getCoordonnees()).getAbscisse(),cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()));
+				if(j.getBase().estDans(rob)){
+					j.getBase().removeRobot(rob);
+				}
 			}
 			else{
-
-				this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(new Coordonnees(cord_unit.getAbscisse(),cord_unit.getOrdonnee()));
+				//On entre dans base
+				rob.deployer(j.getBase().getCord());
+				j.addRobot(rob);
 			}
-			this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = rob;
-			rob.deployer(new Coordonnees(cord_unit.cibler(direc.getCoordonnees()).getAbscisse(),cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()));
+				if(!(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] instanceof Base)){
+					this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(new Coordonnees(cord_unit.getAbscisse(),cord_unit.getOrdonnee()));
+				}
 			return true;
 		}
-
-
 	}
+
 	public boolean deplacer(Joueur j,Robot rob,Direction direc){
 		Coordonnees cord_unit = rob.getCord();
 		if(cord_unit.cibler(direc.getCoordonnees()).getAbscisse() < 0 || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() < 0 || cord_unit.cibler(direc.getCoordonnees()).getAbscisse() > this.grille.length || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() > this.grille[0].length){
