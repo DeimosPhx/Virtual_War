@@ -13,4 +13,6 @@ package Terrain;
 		private Coordonnees direction;
 		private Direction(Coordonnees direction) {this.direction=direction;}
 		public Coordonnees getCoordonnees() { return direction; }
+		public int getAbscisse(){return this.getCoordonnees().getAbscisse();}
+		public int getOrdonnee(){return this.getCoordonnees().getOrdonnee();}
 	}
