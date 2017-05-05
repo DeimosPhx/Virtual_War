@@ -7,7 +7,6 @@ import Terrain.Parcelle;
 import Terrain.Plateau;
 
 public class Char extends Robot{
-
 	public Char(int equipe, Coordonnees coord, Plateau plateau) {
 		super(coord);
 		super.energie = 60;
