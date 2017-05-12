@@ -28,8 +28,8 @@ import unite.Tireur;
 public class Jeu extends Application{
 	Scene scene;
 	int tauxObstacle, tailleX = 10, tailleY=10;
-	ArrayList<Robot> compoJ1;
-	ArrayList<Robot> compoJ2;
+	HashMap<String,Robot> compoJ1;
+	HashMap<String,Robot> compoJ2;
 	boolean joueur1EstHumain, joueur2EstHumain;
 	Base B1,B2;
 	Vue vueJ1, vueJ2;
@@ -58,10 +58,9 @@ public class Jeu extends Application{
 
 	
 	
-	public Jeu(int tauxObstacle, ArrayList<Robot> compoJ1,ArrayList<Robot> compoJ2,boolean joueur1EstHumain,boolean joueur2EstHumain,int nbCharJ1,int nbCharJ2,int nbTireurJ1,int nbTireurJ2,int nbPiegeurJ1,int nbPiegeurJ2){
+	public Jeu(int tauxObstacle,boolean joueur1EstHumain,boolean joueur2EstHumain,int nbCharJ1,int nbCharJ2,int nbTireurJ1,int nbTireurJ2,int nbPiegeurJ1,int nbPiegeurJ2){
 	this.tauxObstacle = tauxObstacle;
-	this.compoJ1 = compoJ1;
-	this.compoJ2 = compoJ2;
+	setCompo( nbCharJ1, nbCharJ2, nbTireurJ1, nbTireurJ2, nbPiegeurJ1, nbPiegeurJ2, plateau);
 	this.joueur1EstHumain = joueur1EstHumain;
 	this.joueur2EstHumain = joueur2EstHumain;
 	Base B1 = new Base(new Coordonnees(0,0),1);
@@ -84,23 +83,30 @@ public class Jeu extends Application{
 	}
 
 	public void setCompo(int nbCharJ1,int nbCharJ2,int nbTireurJ1,int nbTireurJ2,int nbPiegeurJ1,int nbPiegeurJ2, Plateau plateau){
+		int cpt = 0;
 		for(int i = 0; i<nbCharJ1; i++){
-			compoJ1.add(new Char(1,new Coordonnees(0, 0), plateau));
+			cpt++;
+			compoJ1.put(""+cpt,new Char(1,new Coordonnees(0, 0), plateau));
 		}
 		for(int i = 0; i<nbCharJ2; i++){
-			compoJ2.add(new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
+			cpt++;
+			compoJ2.put(""+cpt,new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
 		}
 		for(int i = 0; i<nbTireurJ1; i++){
-			compoJ1.add(new Tireur(1,new Coordonnees(0, 0), plateau));
+			cpt++;
+			compoJ1.put(""+cpt,new Tireur(1,new Coordonnees(0, 0), plateau));
 		}
 		for(int i = 0; i<nbTireurJ2; i++){
-			compoJ2.add(new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
+			cpt++;
+			compoJ2.put(""+cpt,new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
 		}
 		for(int i = 0; i<nbPiegeurJ1; i++){
-			compoJ1.add(new Char(1,new Coordonnees(0, 0), plateau));
+			cpt++;
+			compoJ1.put(""+cpt,new Char(1,new Coordonnees(0, 0), plateau));
 		}
 		for(int i = 0; i<nbPiegeurJ1; i++){
-			compoJ1.add(new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
+			cpt++;
+			compoJ1.put(""+cpt,new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
 		}
 
 	}
