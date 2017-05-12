@@ -1,5 +1,4 @@
 package Terrain;
-
 import unite.Char;
 import unite.Mine;
 import unite.Piegeur;
@@ -22,34 +21,35 @@ import joueur.Vue;
 /*import javax.swing.*;
 import java.awt.*;*/
 /*
- * Ebauche de plateau graphique int�gr� au code.
+ * Ebauche de plateau graphique intï¿½grï¿½ au code.
  */
 public class Plateau extends JPanel{
 	//attributs
-	private Parcelle[][] grille;
+	public static Parcelle[][] grille;
 	private int tailleX,tailleY;
 	private static Map<String,ImageIcon> images= new HashMap<>();
 	private static final int tailleParcelle=50;
 	private Random r = new Random();
 	//constructors
-
+	//CHANGEMENT
+		private boolean tourJ1 = true;
 	public Plateau(int taillex,int tailley){
 		this.grille = new Parcelle[taillex][tailley];
 		this.tailleX = taillex;
 		this.tailleY = tailley;
-		images.put("herbe"		,new ImageIcon("images/Herbe.png"	));
-		images.put("1obstacle"	,new ImageIcon("images/Montagne.png"));
-		images.put("2obstacle"	,new ImageIcon("images/Foret.png"	));
-		images.put("1base"		,new ImageIcon("images/Base1.png"	));
-		images.put("2base"		,new ImageIcon("images/Base2.png"	));
-		images.put("1char"		,new ImageIcon("images/Char1.png"	));
-		images.put("2char"		,new ImageIcon("images/Char2.png"	));
-		images.put("1tireur"	,new ImageIcon("images/Tireur1.png"	));
-		images.put("2tireur"	,new ImageIcon("images/Tireur2.png"	));
-		images.put("1piegeur"	,new ImageIcon("images/piegeur1.png"));
-		images.put("2piegeur"	,new ImageIcon("images/piegeur2.png"));
-		images.put("1mine"		,new ImageIcon("images/Mine1.png"	));
-		images.put("2mine"		,new ImageIcon("images/Mine2.png"	));
+		images.put("herbe"		,new ImageIcon(getClass().getResource("/images/Herbe.png")));
+		images.put("1obstacle"	,new ImageIcon(getClass().getResource("/images/Montagne.png")));
+		images.put("2obstacle"	,new ImageIcon(getClass().getResource("/images/Foret.png"	)));
+		images.put("1base"		,new ImageIcon(getClass().getResource("/images/Base1.png"	)));
+		images.put("2base"		,new ImageIcon(getClass().getResource("/images/Base2.png"	)));
+		images.put("1char"		,new ImageIcon(getClass().getResource("/images/Char1.png"	)));
+		images.put("2char"		,new ImageIcon(getClass().getResource("/images/Char2.png"	)));
+		images.put("1tireur"	,new ImageIcon(getClass().getResource("/images/Tireur1.png"	)));
+		images.put("2tireur"	,new ImageIcon(getClass().getResource("/images/Tireur2.png"	)));
+		images.put("1piegeur"	,new ImageIcon(getClass().getResource("/images/piegeur1.png")));
+		images.put("2piegeur"	,new ImageIcon(getClass().getResource("/images/piegeur2.png")));
+		images.put("1mine"		,new ImageIcon(getClass().getResource("/images/Mine1.png"	)));
+		images.put("2mine"		,new ImageIcon(getClass().getResource("/images/Mine2.png"	)));
 
 		for(int i=0;i<taillex;i++){
 			for(int j=0;j<tailley;j++){
@@ -59,54 +59,58 @@ public class Plateau extends JPanel{
 		Frame f = new Frame("Terrain");
 		f.setBounds(500,200, tailleParcelle*tailleX+3, tailleParcelle*tailleY+33);
 		f.add(this);
-		// Fermeture de la fenêtre
+		// Fermeture de la fenÃªtre
 		f.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e)  {System.exit(0);}
 		});
-		// Affichage de la fenêtre
+		// Affichage de la fenÃªtre
 		f.setVisible(true);
 
 	}
 	public void paint(Graphics g) {
+		tourJ1 = !tourJ1;
 		for (int x=0; x<tailleX; x++){
 			for (int y=0; y<tailleY; y++){ 
-				if 	   (this.grille[x][y] instanceof Char) {
-					if(this.grille[x][y].getEquipe()==1){
-						g.drawImage(images.get("1char").getImage(),x*tailleParcelle,y*tailleParcelle,null);
+				if 	  (this.grille[y][x] instanceof Char) {
+					if(this.grille[y][x].getEquipe()==1){
+						g.drawImage(images.get("1char").getImage(),x*tailleParcelle,y*tailleParcelle+100,null);
 					}
 					else{
 						g.drawImage(images.get("2char").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 				}
-				else if(this.grille[x][y] instanceof Obstacle) {
-						g.drawImage(images.get("1obstacle").getImage(),x*tailleParcelle,y*tailleParcelle,null);
+				else if(this.grille[y][x] instanceof Obstacle) {
+					g.drawImage(images.get("1obstacle").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 				}
-				else if(this.grille[x][y] instanceof Base) {
-					if(this.grille[x][y].getEquipe()==1){
+				else if(this.grille[y][x] instanceof Base) {
+					if(this.grille[y][x].getEquipe()==1){
 						g.drawImage(images.get("1base").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 					else{
 						g.drawImage(images.get("2base").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 				}
-				else if(this.grille[x][y] instanceof Tireur) {
-					if(this.grille[x][y].getEquipe()==1){
+				else if(this.grille[y][x] instanceof Tireur) {
+					if(this.grille[y][x].getEquipe()==1){
 						g.drawImage(images.get("1tireur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 					else{
 						g.drawImage(images.get("2tireur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 				}
-				else if(this.grille[x][y] instanceof Mine) {
-					if(this.grille[x][y].getEquipe()==1){
+				else if(this.grille[y][x] instanceof Mine) {
+					if(this.grille[y][x].getEquipe()==1 && tourJ1){
 						g.drawImage(images.get("1mine").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
-					else{
+					else if(this.grille[y][x].getEquipe()==2 && !tourJ1){
 						g.drawImage(images.get("2mine").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
+					else{
+						g.drawImage(images.get("herbe").getImage(),x*tailleParcelle,y*tailleParcelle,null);
+					}
 				}
-				else if(this.grille[x][y] instanceof Piegeur) {
-					if(this.grille[x][y].getEquipe()==1){
+				else if(this.grille[y][x] instanceof Piegeur) {
+					if(this.grille[y][x].getEquipe()==1){
 						g.drawImage(images.get("1piegeur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
 					}
 					else{
@@ -183,26 +187,25 @@ public class Plateau extends JPanel{
 			 * on ne fait rien car on rencontre un obstacle ou un robot
 			 */
 			return false;
-
 		}
 		else{
-			this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = rob;
-			rob.deployer(new Coordonnees(cord_unit.cibler(direc.getCoordonnees()).getAbscisse(),cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()));
-			if(j.getBase().estDans(rob)){
-				j.getBase().removeRobot(rob);
-			}
-
-			if(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] instanceof Base){
-
+			if(!(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Base)){
+				this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = rob;
+				rob.deployer(new Coordonnees(cord_unit.cibler(direc.getCoordonnees()).getAbscisse(),cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()));
+				if(j.getBase().estDans(rob)){
+					j.getBase().removeRobot(rob);
+				}
 			}
 			else{
-
-				this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(new Coordonnees(cord_unit.getAbscisse(),cord_unit.getOrdonnee()));
+				//On entre dans base
+				rob.deployer(j.getBase().getCord());
+				j.addRobot(rob);
 			}
+				if(!(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] instanceof Base)){
+					this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(new Coordonnees(cord_unit.getAbscisse(),cord_unit.getOrdonnee()));
+				}
 			return true;
 		}
-
-
 	}
 	public boolean deplacer(Joueur j,Robot rob,Direction direc){
 		Coordonnees cord_unit = rob.getCord();
@@ -217,7 +220,7 @@ public class Plateau extends JPanel{
 		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Base){
 			/*
 			 * destination: base
-			 * effet: ajout de l'unit� dans la liste de la Base
+			 * effet: ajout de l'unitï¿½ dans la liste de la Base
 			 * return: true
 			 */
 			Base b = j.getBase();
@@ -250,7 +253,7 @@ public class Plateau extends JPanel{
 			 *effet: deplacement
 			 *return: true
 			 */
-			//gestion de l'eventuallit� d'etre dans la base
+			//gestion de l'eventuallitï¿½ d'etre dans la base
 			if(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] instanceof Base){
 				Base b = j.getBase();
 				b.removeRobot(rob);
@@ -264,7 +267,7 @@ public class Plateau extends JPanel{
 		}
 		/*
 		 * cible: this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()]
-		 * coordonnees unit�: this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()]
+		 * coordonnees unitï¿½: this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()]
 		 * coordonnees de la destination: this.grille[direc.getCoordonnees().getAbscisse()][direc.getCoordonnees().getOrdonnee()]
 		 */
 
