@@ -11,8 +11,8 @@ public class Base extends Parcelle{
 	}
 	public boolean estDans(Robot rob){
 		boolean in = false;
-		for(int i=0;i<lst.size();i++){
-			in = lst.get(i).equals(rob);
+		for(Robot r : lst){
+			in = r.equals(rob);
 		}
 		return in;
 	}

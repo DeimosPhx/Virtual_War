@@ -51,25 +51,51 @@ public class Parcelle {
 	}
 	
 	public boolean autoriserPlacementObstacle(Plateau plat,Coordonnees c){
-		if(c.getAbscisse()!=0 && c.getOrdonnee()!=0){
-			if(!plat.getGrille()[c.getAbscisse()+Direction.HAUT_GAUCHE.getAbscisse()][c.getOrdonnee()+Direction.HAUT_GAUCHE.getOrdonnee()].estVide()){
+		/*Coordonnees[] diags = new Coordonnees[4];
+		diags[0]=Direction.HAUT_GAUCHE.getCoordonnees();
+		diags[1]=Direction.HAUT_DROITE.getCoordonnees();
+		diags[2]=Direction.BAS_GAUCHE.getCoordonnees();
+		diags[3]=Direction.BAS_DROITE.getCoordonnees();
+		for(int i=0;i<4;i++){
+		if(plat.estDans(plat[c.getAbscisse()][c.getOrdonnee()].getCord().cibler(diags[i]))){
+			return false;
+		}
+		}*/
+		if(c.getAbscisse()>1 && c.getOrdonnee()>1){
+			Coordonnees target = new Coordonnees(c.getAbscisse()+Direction.HAUT_GAUCHE.getCoordonnees().getAbscisse(),c.getOrdonnee()+Direction.HAUT_GAUCHE.getCoordonnees().getOrdonnee());
+			if(!plat.estDans(target)){
 				return false;
 			}
+			/*if(!plat.getGrille()[c.getAbscisse()+Direction.HAUT_GAUCHE.getCoordonnees().getAbscisse()][c.getOrdonnee()+Direction.HAUT_GAUCHE.getCoordonnees().getOrdonnee()].estVide()){
+				return false;
+			}*/
 		}
 		if(c.getAbscisse()!=0 && c.getOrdonnee()!=9){
-			if(!plat.getGrille()[c.getAbscisse()+Direction.HAUT_DROITE.getAbscisse()][c.getOrdonnee()+Direction.HAUT_DROITE.getOrdonnee()].estVide()){
+			Coordonnees target = new Coordonnees(c.getAbscisse()+Direction.HAUT_DROITE.getCoordonnees().getAbscisse(),c.getOrdonnee()+Direction.HAUT_DROITE.getCoordonnees().getOrdonnee());
+			if(!plat.estDans(target)){
 				return false;
 			}
+			/*if(!plat.getGrille()[c.getAbscisse()+Direction.HAUT_DROITE.getCoordonnees().getAbscisse()][c.getOrdonnee()+Direction.HAUT_DROITE.getCoordonnees().getOrdonnee()].estVide()){
+				return false;
+			}*/
 		}
 		if(c.getAbscisse()!=9 && c.getOrdonnee()!=0){
-			if(!plat.getGrille()[c.getAbscisse()+Direction.BAS_GAUCHE.getAbscisse()][c.getOrdonnee()+Direction.BAS_GAUCHE.getOrdonnee()].estVide()){
+			Coordonnees target = new Coordonnees(c.getAbscisse()+Direction.BAS_GAUCHE.getCoordonnees().getAbscisse(),c.getOrdonnee()+Direction.BAS_GAUCHE.getCoordonnees().getOrdonnee());
+			if(!plat.estDans(target)){
 				return false;
 			}
+			/*if(!plat.getGrille()[c.getAbscisse()+Direction.BAS_GAUCHE.getCoordonnees().getAbscisse()][c.getOrdonnee()+Direction.BAS_GAUCHE.getCoordonnees().getOrdonnee()].estVide()){
+				return false;
+			}*/
 		}
 		if(c.getAbscisse()!=9 && c.getOrdonnee()!=9){
-			if(!plat.getGrille()[c.getAbscisse()+Direction.BAS_DROITE.getAbscisse()][c.getOrdonnee()+Direction.BAS_DROITE.getOrdonnee()].estVide()){
+			Coordonnees target = new Coordonnees(c.getAbscisse()+Direction.BAS_DROITE.getCoordonnees().getAbscisse(),c.getOrdonnee()+Direction.BAS_DROITE.getCoordonnees().getOrdonnee());
+			if(!plat.estDans(target)){
 				return false;
 			}
+			/*if(!plat.getGrille()[c.getAbscisse()+Direction.BAS_DROITE.getCoordonnees().getAbscisse()][c.getOrdonnee()+Direction.BAS_DROITE.getCoordonnees().getOrdonnee()].estVide()){
+				return false;
+			}*/
 		}
 		
 		return true;
