@@ -1,7 +1,5 @@
 package ordinateur;
 
-import java.util.ArrayList;
-
 public class Arete {
 	
 	private Sommet entrant;
