@@ -37,8 +37,7 @@ public class LancementEnFX extends Application {
 	private int nbCharJ1, nbCharJ2, nbTireurJ1, nbTireurJ2, nbPiegeurJ1, nbPiegeurJ2;
 	private ArrayList<Robot> compoJ1 =  new ArrayList<Robot>();
 	private ArrayList<Robot> compoJ2 = new ArrayList<Robot>();
-
-
+	
 	public void start(Stage stage) throws Exception {
 		VBox root = new VBox();
 
@@ -287,20 +286,17 @@ public class LancementEnFX extends Application {
 		start.setOnAction(e->{
 			joueur1EstHumain = humainJ1.isSelected();
 			joueur2EstHumain = humainJ2.isSelected();
-			Jeu jeu = new Jeu(tauxObstacle,joueur1EstHumain, joueur2EstHumain,nbCharJ1, nbCharJ2, nbTireurJ1, nbTireurJ2, nbPiegeurJ1, nbPiegeurJ2);
+			Jeu jeu =new Jeu();
+			jeu.setReglage(tauxObstacle,joueur1EstHumain, joueur2EstHumain,nbCharJ1, nbCharJ2, nbTireurJ1, nbTireurJ2, nbPiegeurJ1, nbPiegeurJ2);
 			try {
 				jeu.start(stage);
-				stage.close();
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			//stage.setScene(jeu.scene);
 		});
 
 	}
-
-
 	public static void main(String[] args) {
 		Application.launch(args);
 	}

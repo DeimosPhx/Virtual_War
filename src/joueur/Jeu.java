@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import unite.Char;
@@ -26,39 +27,36 @@ import unite.Robot;
 import unite.Tireur;
 
 public class Jeu extends Application{
-	Scene scene;
 	int tauxObstacle, tailleX = 10, tailleY=10;
-	HashMap<String,Robot> compoJ1;
-	HashMap<String,Robot> compoJ2;
+	HashMap<Integer,Robot> compoJ1 = new HashMap<Integer,Robot>();
+	HashMap<Integer,Robot> compoJ2 = new HashMap<Integer,Robot>();
 	boolean joueur1EstHumain, joueur2EstHumain;
 	Base B1,B2;
 	Vue vueJ1, vueJ2;
 	Joueur joueur1,joueur2;
 	Plateau plateau;
-	private static Map<String,Image> images= new HashMap<>();
+	private static HashMap<String,Image> images= new HashMap<String,Image>();
 	private static final int tailleParcelle=50;
 	boolean tourJ1;
 	
 	private static void initialisation(){
-		images.put("herbe"		,new Image("/images/Herbe.png"));
-		images.put("herbe"		,new Image("/images/Herbe.png"));
-		images.put("1obstacle"	,new Image("/images/Montagne.png"));
-		images.put("2obstacle"	,new Image("/images/Foret.png"	));
-		images.put("1base"		,new Image("/images/Base1.png"	));
-		images.put("2base"		,new Image("/images/Base2.png"	));
-		images.put("1char"		,new Image("/images/Char1.png"	));
-		images.put("2char"		,new Image("/images/Char2.png"	));
-		images.put("1tireur"	,new Image("/images/Tireur1.png"	));
-		images.put("2tireur"	,new Image("/images/Tireur2.png"	));
-		images.put("1piegeur"	,new Image("/images/piegeur1.png"));
-		images.put("2piegeur"	,new Image("/images/piegeur2.png"));
-		images.put("1mine"		,new Image("/images/Mine1.png"	));
-		images.put("2mine"		,new Image("/images/Mine2.png"	));
-	}
+		images.put("herbe"		,new Image("Herbe.png"	));
+		images.put("1obstacle"	,new Image("Montagne.png"));
+		images.put("2obstacle"	,new Image("Foret.png"	));
+		images.put("1base"		,new Image("Base1.png"	));
+		images.put("2base"		,new Image("Base2.png"	));
+		images.put("1char"		,new Image("Char1.png"	));
+		images.put("2char"		,new Image("Char2.png"	));
+		images.put("1tireur"	,new Image("Tireur1.png"));
+		images.put("2tireur"	,new Image("Tireur2.png"));
+		images.put("1piegeur"	,new Image("piegeur1.png"));
+		images.put("2piegeur"	,new Image("piegeur2.png"));
+		images.put("1mine"		,new Image("Mine1.png"	));
+		images.put("2mine"		,new Image("Mine2.png"	));
 
+	}
 	
-	
-	public Jeu(int tauxObstacle,boolean joueur1EstHumain,boolean joueur2EstHumain,int nbCharJ1,int nbCharJ2,int nbTireurJ1,int nbTireurJ2,int nbPiegeurJ1,int nbPiegeurJ2){
+	public void setReglage(int tauxObstacle,boolean joueur1EstHumain,boolean joueur2EstHumain,int nbCharJ1,int nbCharJ2,int nbTireurJ1,int nbTireurJ2,int nbPiegeurJ1,int nbPiegeurJ2){
 	this.tauxObstacle = tauxObstacle;
 	setCompo( nbCharJ1, nbCharJ2, nbTireurJ1, nbTireurJ2, nbPiegeurJ1, nbPiegeurJ2, plateau);
 	this.joueur1EstHumain = joueur1EstHumain;
@@ -86,27 +84,27 @@ public class Jeu extends Application{
 		int cpt = 0;
 		for(int i = 0; i<nbCharJ1; i++){
 			cpt++;
-			compoJ1.put(""+cpt,new Char(1,new Coordonnees(0, 0), plateau));
+			compoJ1.put(cpt,new Char(1,new Coordonnees(0, 0), plateau));
 		}
 		for(int i = 0; i<nbCharJ2; i++){
 			cpt++;
-			compoJ2.put(""+cpt,new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
+			compoJ2.put(cpt,new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
 		}
 		for(int i = 0; i<nbTireurJ1; i++){
 			cpt++;
-			compoJ1.put(""+cpt,new Tireur(1,new Coordonnees(0, 0), plateau));
+			compoJ1.put(cpt,new Tireur(1,new Coordonnees(0, 0), plateau));
 		}
 		for(int i = 0; i<nbTireurJ2; i++){
 			cpt++;
-			compoJ2.put(""+cpt,new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
+			compoJ2.put(cpt,new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
 		}
 		for(int i = 0; i<nbPiegeurJ1; i++){
 			cpt++;
-			compoJ1.put(""+cpt,new Char(1,new Coordonnees(0, 0), plateau));
+			compoJ1.put(cpt,new Char(1,new Coordonnees(0, 0), plateau));
 		}
 		for(int i = 0; i<nbPiegeurJ1; i++){
 			cpt++;
-			compoJ1.put(""+cpt,new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
+			compoJ1.put(cpt,new Char(2,new Coordonnees(tailleX-1, tailleY-1), plateau));
 		}
 
 	}
@@ -145,66 +143,69 @@ public class Jeu extends Application{
 			for (int y=0; y<tailleY; y++){
 				if 	  (Plateau.grille[y][x] instanceof Char) {
 					if(Plateau.grille[y][x].getEquipe()==1){
-						gc.drawImage(images.get("1char"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("1char"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 					else{
-						gc.drawImage(images.get("2char"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("2char"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 				}
 				else if(Plateau.grille[y][x] instanceof Obstacle) {
-					gc.drawImage(images.get("1obstacle"),x*tailleParcelle,y*tailleParcelle+100);
+					gc.drawImage(images.get("1obstacle"),x*tailleParcelle,y*tailleParcelle+80);
 				}
 				else if(Plateau.grille[y][x] instanceof Base) {
 					if(Plateau.grille[y][x].getEquipe()==1){
-						gc.drawImage(images.get("1base"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("1base"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 					else{
-						gc.drawImage(images.get("2base"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("2base"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 				}
 				else if(Plateau.grille[y][x] instanceof Tireur) {
 					if(Plateau.grille[y][x].getEquipe()==1){
-						gc.drawImage(images.get("1tireur"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("1tireur"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 					else{
-						gc.drawImage(images.get("2tireur"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("2tireur"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 				}
 				else if(Plateau.grille[y][x] instanceof Mine) {
 					if(Plateau.grille[y][x].getEquipe()==1 && tourJ1){
-						gc.drawImage(images.get("1mine"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("1mine"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 					else if(Plateau.grille[y][x].getEquipe()==2 && !tourJ1){
-						gc.drawImage(images.get("2mine"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("2mine"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 					else{
-						gc.drawImage(images.get("herbe"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("herbe"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 				}
 				else if(Plateau.grille[y][x] instanceof Piegeur) {
 					if(Plateau.grille[y][x].getEquipe()==1){
-						gc.drawImage(images.get("1piegeur"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("1piegeur"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 					else{
-						gc.drawImage(images.get("2piegeur"),x*tailleParcelle,y*tailleParcelle+100);
+						gc.drawImage(images.get("2piegeur"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 				}
 				else {
-					gc.drawImage(images.get("herbe"),x*tailleParcelle,y*tailleParcelle+100);
+					gc.drawImage(images.get("herbe"),x*tailleParcelle,y*tailleParcelle+80);
 				}
 			}
 		}
 
 	}
-	
-	
+
+	@Override
 	public void start(Stage stage) throws Exception {
-		Canvas canvas = new Canvas (300, 300);
-		GraphicsContext gc = canvas.getGraphicsContext2D();
+		stage.close();
+		Canvas canvas = new Canvas(tailleX*tailleParcelle,tailleY*tailleParcelle+160);
 		VBox root = new VBox();
-		this.scene = new Scene(root);
-		draw(gc);
-		
-		
+		GraphicsContext gcJeu = canvas.getGraphicsContext2D();
+		root.getChildren().add(canvas);
+		Scene sceneJeu = new Scene(root);
+		stage.setScene(sceneJeu);
+		stage.show();
+		draw(gcJeu);
 	}
+
 }

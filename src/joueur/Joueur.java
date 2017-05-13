@@ -8,7 +8,7 @@ import unite.Robot;
 public class Joueur {
 
 	int equipe;
-	private HashMap<String,Robot> listeRobot = new HashMap<String,Robot>();
+	private HashMap<Integer, Robot> listeRobot = new HashMap<Integer,Robot>();
 	private Base base;	
 	private Vue vue;
 	
@@ -23,13 +23,13 @@ public class Joueur {
 	public Base getBase(){
 		return this.base;
 	}
-	public void setList(HashMap<String,Robot> listeRobot){
-		this.listeRobot = listeRobot;
+	public void setList(HashMap<Integer, Robot> compoJ1){
+		this.listeRobot = compoJ1;
 	}
 	public Robot getRobot(int i){
 		return listeRobot.get(i);
 	}
-	public HashMap<String,Robot>getListeRobot(){
+	public HashMap<Integer,Robot>getListeRobot(){
 		return listeRobot;
 	}
 	public void supprimerRobot(Robot robot){
@@ -42,6 +42,6 @@ public class Joueur {
 		this.equipe = equipe;
 	}
 	public void addRobot(Robot robot){
-		listeRobot.put(listeRobot.size()+"",robot);
+		listeRobot.put(listeRobot.size()+1,robot);
 	}
 }

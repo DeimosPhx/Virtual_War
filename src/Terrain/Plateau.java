@@ -27,8 +27,6 @@ public class Plateau extends JPanel{
 	//attributs
 	public static Parcelle[][] grille;
 	private int tailleX,tailleY;
-	private static Map<String,ImageIcon> images= new HashMap<>();
-	private static final int tailleParcelle=50;
 	private Random r = new Random();
 	//constructors
 	//CHANGEMENT
@@ -36,92 +34,14 @@ public class Plateau extends JPanel{
 	public Plateau(int taillex,int tailley){
 		this.grille = new Parcelle[taillex][tailley];
 		this.tailleX = taillex;
-		this.tailleY = tailley;
-		images.put("herbe"		,new ImageIcon(getClass().getResource("/images/Herbe.png")));
-		images.put("1obstacle"	,new ImageIcon(getClass().getResource("/images/Montagne.png")));
-		images.put("2obstacle"	,new ImageIcon(getClass().getResource("/images/Foret.png"	)));
-		images.put("1base"		,new ImageIcon(getClass().getResource("/images/Base1.png"	)));
-		images.put("2base"		,new ImageIcon(getClass().getResource("/images/Base2.png"	)));
-		images.put("1char"		,new ImageIcon(getClass().getResource("/images/Char1.png"	)));
-		images.put("2char"		,new ImageIcon(getClass().getResource("/images/Char2.png"	)));
-		images.put("1tireur"	,new ImageIcon(getClass().getResource("/images/Tireur1.png"	)));
-		images.put("2tireur"	,new ImageIcon(getClass().getResource("/images/Tireur2.png"	)));
-		images.put("1piegeur"	,new ImageIcon(getClass().getResource("/images/piegeur1.png")));
-		images.put("2piegeur"	,new ImageIcon(getClass().getResource("/images/piegeur2.png")));
-		images.put("1mine"		,new ImageIcon(getClass().getResource("/images/Mine1.png"	)));
-		images.put("2mine"		,new ImageIcon(getClass().getResource("/images/Mine2.png"	)));
+		this.tailleY = tailley;		
 
 		for(int i=0;i<taillex;i++){
 			for(int j=0;j<tailley;j++){
 				this.grille[i][j] = new Parcelle(new Coordonnees(i,j));
 			}
 		}
-		Frame f = new Frame("Terrain");
-		f.setBounds(500,200, tailleParcelle*tailleX+3, tailleParcelle*tailleY+33);
-		f.add(this);
-		// Fermeture de la fenÃªtre
-		f.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e)  {System.exit(0);}
-		});
-		// Affichage de la fenÃªtre
-		f.setVisible(true);
-
-	}
-	public void paint(Graphics g) {
-		tourJ1 = !tourJ1;
-		for (int x=0; x<tailleX; x++){
-			for (int y=0; y<tailleY; y++){ 
-				if 	  (this.grille[y][x] instanceof Char) {
-					if(this.grille[y][x].getEquipe()==1){
-						g.drawImage(images.get("1char").getImage(),x*tailleParcelle,y*tailleParcelle+100,null);
-					}
-					else{
-						g.drawImage(images.get("2char").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-				}
-				else if(this.grille[y][x] instanceof Obstacle) {
-					g.drawImage(images.get("1obstacle").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-				}
-				else if(this.grille[y][x] instanceof Base) {
-					if(this.grille[y][x].getEquipe()==1){
-						g.drawImage(images.get("1base").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-					else{
-						g.drawImage(images.get("2base").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-				}
-				else if(this.grille[y][x] instanceof Tireur) {
-					if(this.grille[y][x].getEquipe()==1){
-						g.drawImage(images.get("1tireur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-					else{
-						g.drawImage(images.get("2tireur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-				}
-				else if(this.grille[y][x] instanceof Mine) {
-					if(this.grille[y][x].getEquipe()==1 && tourJ1){
-						g.drawImage(images.get("1mine").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-					else if(this.grille[y][x].getEquipe()==2 && !tourJ1){
-						g.drawImage(images.get("2mine").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-					else{
-						g.drawImage(images.get("herbe").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-				}
-				else if(this.grille[y][x] instanceof Piegeur) {
-					if(this.grille[y][x].getEquipe()==1){
-						g.drawImage(images.get("1piegeur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-					else{
-						g.drawImage(images.get("2piegeur").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-					}
-				}
-				else {
-					g.drawImage(images.get("herbe").getImage(),x*tailleParcelle,y*tailleParcelle,null);
-				}
-			}
-		}
+		
 	}
 
 	public Parcelle[][] getGrille(){
@@ -207,100 +127,12 @@ public class Plateau extends JPanel{
 			return true;
 		}
 	}
-	public boolean deplacer(Joueur j,Robot rob,Direction direc){
-		Coordonnees cord_unit = rob.getCord();
-		if(cord_unit.cibler(direc.getCoordonnees()).getAbscisse() < 0 || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() < 0 || cord_unit.cibler(direc.getCoordonnees()).getAbscisse() > this.grille.length || cord_unit.cibler(direc.getCoordonnees()).getOrdonnee() > this.grille[0].length){
-			/*
-			 * destination: en dehors du plateau
-			 * effet: cancel deplacement
-			 * return: false
-			 */
-			return false;
-		}
-		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Base){
-			/*
-			 * destination: base
-			 * effet: ajout de l'unitï¿½ dans la liste de la Base
-			 * return: true
-			 */
-			Base b = j.getBase();
-			b.addRobot(rob);
-			this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()].vider();
-			return true;
-		}
-		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Obstacle || this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Robot){
-			/*
-			 * destination: Obstacle || Robot
-			 * effet: cancel deplacement 
-			 * return: false
-			 */
-			return false;
-		}
-		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Mine){
-			/*
-			 * destination: Mine
-			 * effet: deplacement + explosion
-			 * return: true
-			 */
-			//faire explosion de la mine (CF antoine)
-			this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()];
-			this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()].vider();
-			return true;
-		}
-		else{
-			/*
-			 * destination: Parcelle vide
-			 *effet: deplacement
-			 *return: true
-			 */
-			//gestion de l'eventuallitï¿½ d'etre dans la base
-			if(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] instanceof Base){
-				Base b = j.getBase();
-				b.removeRobot(rob);
-				rob.deployer(new Coordonnees(cord_unit.cibler(direc.getCoordonnees()).getAbscisse(),cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()));
-			}
-			else{
-				this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()];
-				this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()].vider();
-			}
-			return true;
-		}
-		/*
-		 * cible: this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()]
-		 * coordonnees unitï¿½: this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()]
-		 * coordonnees de la destination: this.grille[direc.getCoordonnees().getAbscisse()][direc.getCoordonnees().getOrdonnee()]
-		 */
-
-	}
+	
 	public boolean estDans(Coordonnees cord){
 		return this.tailleX > cord.getAbscisse() && this.tailleY > cord.getOrdonnee()
 				&& cord.getAbscisse() >=0 && cord.getOrdonnee() >=0;
 	}
-	//ebauche graphique
-	/*	public void afficher(String title){
-		if(this.graphique){
-			this.setTitle(title);
-			this.setSize(800,600);
-			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			//this.setSize(this.tailleX*10,this.tailleY*10);
-			this.setLayout(new GridLayout(this.tailleX,this.tailleY));
-			String c = new String("");
-			for(int x=0;x<this.tailleX;x++){
-				for(int y=0;y<this.tailleY;y++){
-					/*c = "";
-					c += this.grille[x][y];*/
-	/*					//set graphical grid
-				}
-			}
-			this.setVisible(true);
-		}
-		else{
-			JOptionPane.showMessageDialog(null, "ERROR INITIALISATION NOT GRAPHICAL !");
-		}
-	}*/
-	public void placer(int x,int y,char c){
-		//this.grille[x][y] = c;
-	}
+	
 	public String toString(){
 		String out = new String("");
 		for(int x=0;x<this.tailleX;x++){
