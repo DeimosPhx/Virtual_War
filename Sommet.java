@@ -8,26 +8,21 @@ import terrain.Plateau;
 
 public class Sommet {
 
-	private int numero;
+	private Coordonnees coordonnees;
 	private ArrayList<Arete> listeVoisins;
 	private Arete areteRecord;
-	private static int cpt=0;
+	private boolean possedeDejaUnRecord = false;
 	
 	public Sommet(ArrayList<Arete> listeVoisins){
-		this.numero = cpt;
 		this.listeVoisins = listeVoisins;
-		cpt++;
 	}
-	public Sommet(ArrayList<Arete> listeVoisins,Arete areteRecord){
-		this(listeVoisins);
+	public Sommet(Coordonnees coordonnees,ArrayList<Arete> listeVoisins){
+		this.coordonnees = coordonnees;
+		this.listeVoisins = listeVoisins;
+	}
+	public Sommet(Coordonnees coordonnees,ArrayList<Arete> listeVoisins,Arete areteRecord){
+		this(coordonnees,listeVoisins);
 		this.areteRecord = areteRecord;
-	}
-
-	public int getNumero() {
-		return numero;
-	}
-	public void setNumero(int numero) {
-		this.numero = numero;
 	}
 	public Arete getRecord(){
 		return this.areteRecord;
@@ -40,33 +35,39 @@ public class Sommet {
 	}
 	public void addAreteListeVoisins(Arete arete) {
 		listeVoisins.add(arete);
+	}	
+	public Coordonnees getCoordonnees() {
+		return coordonnees;
+	}
+	public void setCoordonnees(Coordonnees coordonnees) {
+		this.coordonnees = coordonnees;
 	}
 	public ArrayList<Arete> remplirVoisinsTireurPiegeur(Plateau plateau,Coordonnees coordonnees,ArrayList<Sommet> listeSommet){
 		
 
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.HAUT.getAbscisse(),coordonnees.getOrdonnee()+Direction.HAUT.getOrdonnee()))){
-			listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()-plateau.getX())));
+			this.listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)-plateau.getY())));
 		}
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.BAS.getAbscisse(),coordonnees.getOrdonnee()+Direction.BAS.getOrdonnee()))){
-			listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()+plateau.getX())));
+			this.listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)+plateau.getY())));
 		}
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.GAUCHE.getAbscisse(),coordonnees.getOrdonnee()+Direction.GAUCHE.getOrdonnee()))){
-			listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()-1)));
+			listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)-1)));
 		}
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.DROITE.getAbscisse(),coordonnees.getOrdonnee()+Direction.DROITE.getOrdonnee()))){
-			listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()+1)));
+			listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)+1)));
 		}
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.HAUT_DROITE.getAbscisse(),coordonnees.getOrdonnee()+Direction.HAUT_DROITE.getOrdonnee()))){
-			listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()-plateau.getX()+1)));
+			listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)-plateau.getY()+1)));
 		}
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.HAUT_GAUCHE.getAbscisse(),coordonnees.getOrdonnee()+Direction.HAUT_GAUCHE.getOrdonnee()))){
-			listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()-plateau.getX()-1)));
+			listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)-plateau.getY()-1)));
 		}
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.BAS_DROITE.getAbscisse(),coordonnees.getOrdonnee()+Direction.BAS_DROITE.getOrdonnee()))){
-			listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()+plateau.getX()+1)));
+			listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)+plateau.getY()+1)));
 		}
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.BAS_GAUCHE.getAbscisse(),coordonnees.getOrdonnee()+Direction.BAS_GAUCHE.getOrdonnee()))){
-			listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()+plateau.getX()-1)));
+			listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)+plateau.getY()-1)));
 		}
 		return listeVoisins;
 	}
@@ -75,30 +76,30 @@ public class Sommet {
 		
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.HAUT.getAbscisse(),coordonnees.getOrdonnee()+Direction.HAUT.getOrdonnee()))){
 			if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.HAUT.getAbscisse()*2,coordonnees.getOrdonnee()+Direction.HAUT.getOrdonnee()*2))){
-				listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()-plateau.getX()*2)));
+				listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)-plateau.getY()*2)));
 			}else{
-				listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()-plateau.getX())));
+				listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)-plateau.getY())));
 			}
 		}
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.BAS.getAbscisse(),coordonnees.getOrdonnee()+Direction.BAS.getOrdonnee()))){
 			if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.BAS.getAbscisse()*2,coordonnees.getOrdonnee()+Direction.BAS.getOrdonnee()*2))){
-				listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()+plateau.getX()*2)));
+				listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)+plateau.getY()*2)));
 			}else{
-				listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()+plateau.getX())));
+				listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)+plateau.getY())));
 			}
 		}
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.GAUCHE.getAbscisse(),coordonnees.getOrdonnee()+Direction.GAUCHE.getOrdonnee()))){
 			if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.GAUCHE.getAbscisse()*2,coordonnees.getOrdonnee()+Direction.GAUCHE.getOrdonnee()*2))){
-				listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()-2)));
+				listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)-2)));
 			}else{
-				listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()-1)));
+				listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)-1)));
 			}
 		}
 		if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.DROITE.getAbscisse(),coordonnees.getOrdonnee()+Direction.DROITE.getOrdonnee()))){
 			if(plateau.autoriser(new Coordonnees(coordonnees.getAbscisse()+Direction.DROITE.getAbscisse()*2,coordonnees.getOrdonnee()+Direction.DROITE.getOrdonnee()*2))){
-				listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()+2)));
+				listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)+2)));
 			}else{
-				listeVoisins.add(new Arete(this,listeSommet.get(this.getNumero()+1)));
+				listeVoisins.add(new Arete(this,listeSommet.get(this.getIndex(plateau)+1)));
 			}
 		}
 		return listeVoisins;
@@ -106,8 +107,9 @@ public class Sommet {
 
 	public void explorer(Arete explore,ArrayList<Arete>listeAreteAExplorer){
 		//exploration de l'arete choisie
-		for(Arete arete : this.listeVoisins){
-			listeAreteAExplorer.add(getNumero(), arete);
+		Sommet aExplorer = explore.getSortant();
+		for(Arete arete : aExplorer.listeVoisins){
+			listeAreteAExplorer.add(arete);
 		}
 		listeAreteAExplorer.remove(explore);
 		
@@ -148,9 +150,9 @@ public class Sommet {
 	}
 
 	public void comparerRecord(Arete arete,Sommet depart){
-		if(this.getRecordChemin(depart,arete)>this.getRecordChemin(depart)){
+		if(!this.possedeDejaUnRecord){
 			this.setRecord(arete);
-		}else if(this.getRecord().equals(null)){
+		}else if(this.getRecordChemin(depart,arete)>this.getRecordChemin(depart)){
 			this.setRecord(arete);
 		}
 	}
@@ -166,10 +168,11 @@ public class Sommet {
 			if(suivante.getEntrant().equals(depart)){cheminTermine=true;}
 		}
 		return justeAvant;
+	
 	}
 	
-	public Coordonnees sommetToCoordonnees(){
-		return new Coordonnees((this.getNumero()-this.getNumero()%10)/10,this.getNumero()%10);
+	public int getIndex(Plateau plateau){
+		return this.getCoordonnees().getOrdonnee()+this.getCoordonnees().getAbscisse()*plateau.getX();
 	}
 
 
