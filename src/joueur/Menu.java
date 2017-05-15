@@ -1,24 +1,54 @@
 package joueur;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
-import unite.*;
-import Terrain.*;
-public class Menu {
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import terrain.Coordonnees;
+import terrain.Obstacle;
+import terrain.Parcelle;
+import terrain.Plateau;
+import unite.Char;
+import unite.Piegeur;
+import unite.Robot;
+import unite.Tireur;
+public class Menu extends Application{
+	
+	// IMPORTANT
+	// NE PAS OUBLIER DE PLACER LES IMAGES DANS LE REPERTOIRES SRC ! (VOIR GIT)
+	//
 	/*
 	 * Objectifs:
 	 * 	acceuillir le joueur
-	 *  on fait composer les équipes des 2 joueurs
+	 *  on fait composer les equipes des 2 joueurs
 	 *  ??
 	 */
-	
+
+	private ArrayList<Robot> compo = new ArrayList<Robot>();
+	private static Map<String,Image> images = new HashMap<>();
+	private boolean initialisation = true;
+
 	/*	showInputDialog(null,String message);
 	 * BESOINS:
 	 * 	compo #arraylist
-	 *  créer base avec compo #return base
+	 *  creer base avec compo #return base
 	 *  generateur terrain #return terrain
 	 */
+	public Menu(){
+	}
+	public ArrayList<Robot> getComp(){
+		return compo;
+	}
 	public static Plateau acceuil(){
 		/* JOptionPane pour dire bonjour */
 		JOptionPane.showMessageDialog(null, "Bienvenue dans Virtual War !");
@@ -26,6 +56,7 @@ public class Menu {
 		Plateau plat = new Plateau(10,10);		
 		return plat;
 	}
+	
 	public static void setObstacle(Plateau ter,Joueur j1,Joueur j2){
 		/*
 		 * on genere les obstacles selon le taux
@@ -43,17 +74,19 @@ public class Menu {
         		isOut = false;
         		int x = rnd.nextInt(9);
             	int y = rnd.nextInt(9);
-	        	if((x!=j1.getBase().getCord().getAbscisse() && y!=j1.getBase().getCord().getOrdonnee()) 
+	        	/*if((x!=j1.getBase().getCord().getAbscisse() && y!=j1.getBase().getCord().getOrdonnee()) 
 	        			&& (x!=j2.getBase().getCord().getAbscisse() && y!=j2.getBase().getCord().getOrdonnee())
 	        			&& (x!=j1.getBase().getCord().getAbscisse()+1 && y!=j1.getBase().getCord().getOrdonnee()+1)
-	        			&& (x!=j2.getBase().getCord().getAbscisse()+1 && y!=j2.getBase().getCord().getOrdonnee()+1)){
+	        			&& (x!=j2.getBase().getCord().getAbscisse()+1 && y!=j2.getBase().getCord().getOrdonnee()+1))*/
+            	if(plat[x][y].autoriserPlacementObstacle(ter,new Coordonnees(x,y))){
 	        		plat[x][y] = new Obstacle(new Coordonnees(x,y));
+	        		plat[x][y].setPasVide();
 	        		isOut = true;
 	        	}
-        	}while(!isOut);
-        }
-    }
-	
+        	     }while(!isOut);
+		}
+	}
+
 	public static boolean obstacleLigCol(Plateau plat){
 		//Colonne
 		for(int i=0; i<10; i++){
@@ -65,7 +98,7 @@ public class Menu {
 				}
 			}
 		}
-		
+
 		for(int j=0; j<10; j++){
 			int cpt = 0;
 			if(plat.getGrille()[0][j] instanceof Obstacle){
@@ -77,12 +110,12 @@ public class Menu {
 		}
 		return true;
 	}
-	
+
 	public static boolean obstacleDiagonale(Plateau plat){
 		Coordonnees actuel = new Coordonnees(0,0);
 		//Pour savoir si la coordonnees actuel ne descend pas en dessous du tableau
 		while(plat.estDans(new Coordonnees(actuel.getAbscisse()+1,actuel.getOrdonnee()))){
-			//Pour savoir si la case en diagonale à droite sera encore dans le tableau
+			//Pour savoir si la case en diagonale droite sera encore dans le tableau
 			while(plat.estDans(new Coordonnees((actuel.getAbscisse()-1),actuel.getOrdonnee()+1))){
 				actuel = new Coordonnees(actuel.getAbscisse()-1,actuel.getOrdonnee()+1);
 				int cpt=0;
@@ -92,75 +125,112 @@ public class Menu {
 				if(cpt == 3){
 					return false;
 				}
-			
+
 			}
 			actuel= new Coordonnees(actuel.getAbscisse()+1,actuel.getOrdonnee());
 		}
 		return true;
 	}
-	
+
 	public static boolean obstaclebase(Plateau plat, Coordonnees coord){
 		return (coord.getAbscisse()>4 && coord.getOrdonnee()>4 && (coord.getAbscisse()<(plat.getX()-3))&& (coord.getOrdonnee()<(plat.getY()-3)));  
 	}
-	
-	public boolean autoriserObstacle(Plateau plateau,Coordonnees c){
-		int cpt=0;
-		//Vérifier que la case possèdent ou non 3 cases obstacles voisines
-		if((c.getOrdonnee()-1)<0||!(plateau.getGrille()[c.getOrdonnee()-1][c.getAbscisse()].estVide())){
-			//voisin du dessus
-			cpt++;
-		}
-		if((c.getAbscisse()+1)>plateau.getY()||!(plateau.getGrille()[c.getOrdonnee()][c.getAbscisse()+1].estVide())){
-			//voisin de droite
-			cpt++;
-		}
-		if((c.getOrdonnee()+1)>plateau.getX()||!(plateau.getGrille()[c.getOrdonnee()+1][c.getAbscisse()].estVide())){
-			//voisin du dessous
-			cpt++;
-		}
-		if((c.getAbscisse()-1)<0||!(plateau.getGrille()[c.getOrdonnee()][c.getAbscisse()-1].estVide())){
-			//voisin de gauche
-			cpt++;
-		}
-		
-		if(cpt==3){return false;}
-		else{return true;}
-		
-	}
 	public static ArrayList<Robot> compo(Joueur j,Plateau plat){
 		//int nbRobot = 0;
-		//String nbRobot1 = JOptionPane.showInputDialog(null,"J"+j.getEquipe() + "\n entrez le nombre de robot souhaité : ");
+		//String nbRobot1 = JOptionPane.showInputDialog(null,"J"+j.getEquipe() + "\n entrez le nombre de robot souhaite : ");
 		//nbRobot = Integer.valueOf(nbRobot1);
-		JOptionPane.showMessageDialog(null, "J"+j.getEquipe()+": formez votre armée !");
+		JOptionPane.showMessageDialog(null, "J"+j.getEquipe()+": formez votre armee !");
 		ArrayList<Robot> armee = new ArrayList<Robot>();
 		for(int i=0; i<3; i++){
 			boolean isOut;
 			do{
 				isOut = true;
 				String selec = JOptionPane.showInputDialog(null,"Quel robot souhaitez vous utiliser ?\n CHAR \n PIEGEUR \n TIREUR");
-			
-			switch(selec){
-			case "CHAR": 
-				Char c1 = new Char(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*9, (j.getEquipe()-1)*9), plat);
-				armee.add(c1);
-				/*
-				 * creer une unitée et l'ajouter à l'arraylist de la base du joueur (selon son equipe)
-				 */
-				break;
-			case "PIEGEUR":
-				Piegeur p1 = new Piegeur(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*9, (j.getEquipe()-1)*9), plat);
-				armee.add(p1);
-				break;
-			case "TIREUR":
-				Tireur t1 = new Tireur(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*9, (j.getEquipe()-1)*9), plat);
-				armee.add(t1);
-				break;
+
+				switch(selec){
+				case "CHAR": 
+					Char c1 = new Char(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*9, (j.getEquipe()-1)*9), plat);
+					armee.add(c1);
+					/*
+					 * creer une unite et l'ajouter a l'arraylist de la base du joueur (selon son equipe)
+					 */
+					break;
+				case "PIEGEUR":
+					Piegeur p1 = new Piegeur(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*9, (j.getEquipe()-1)*9), plat);
+					armee.add(p1);
+					break;
+				case "TIREUR":
+					Tireur t1 = new Tireur(j.getEquipe(),new Coordonnees((j.getEquipe()-1)*9, (j.getEquipe()-1)*9), plat);
+					armee.add(t1);
+					break;
 				default:
 					JOptionPane.showMessageDialog(null, "ERREUR ENTREE INVALIDE");
 					isOut = false;
-			}
+				}
 			}while(!isOut);
 		}
 		return armee;
+	}	
+	private void draw(GraphicsContext gc){
+		//CE IF PERMET DE DETERMINER CE QUE LE MENU DOIT AFFICHER
+		//EN L OCCURENCE LA CREATION DE COMPO
+		if(initialisation){
+			gc.setStroke(Color.BLACK);
+			gc.clearRect(0, 0, 300, 300);
+			gc.drawImage(images.get("char"), 20, 50);
+			gc.drawImage(images.get("piegeur"), 115, 50);
+			gc.drawImage(images.get("tireur"), 215, 50);
+			gc.setStroke(Color.BLACK);
+			//DESSIN DES CARRES
+			gc.strokeRect(00,150, 30,30);
+			gc.strokeRect(30,150, 30,30);
+			gc.strokeRect(60,150, 30,30);
+			
+			gc.strokeRect(110,150, 30,30);
+			gc.strokeRect(140,150, 30,30);
+			gc.strokeRect(170,150, 30,30);
+
+			gc.strokeRect(110+110,150, 30,30);
+			gc.strokeRect(140+110,150, 30,30);
+			gc.strokeRect(170+110,150, 30,30);
+			//DESSIN DU NOMBRE
+			gc.fillText("0", 40, 170);
+			gc.fillText("0", 150, 170);
+			gc.fillText("0", 150+110, 170);
+
+			//PLUS
+			gc.fillRect(13,150, 3,30);
+			gc.fillRect(00,164, 30,3);
+			
+			gc.fillRect(123,150, 3,30);
+			gc.fillRect(110,164, 30,3);
+			
+			gc.fillRect(123+110,150, 3,30);
+			gc.fillRect(110+110,164, 30,3);
+
+			//MOINS
+			gc.fillRect(60,164, 30,3);
+			gc.fillRect(170,164, 30,3);			
+			gc.fillRect(170+110,164, 30,3);
+		}
+	}
+
+	public void start(Stage stage) {
+		VBox root = new VBox();
+		Canvas canvas = new Canvas (500, 200);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		images.put("tireur"		,new Image("tireur.png"	));
+		images.put("piegeur"	,new Image("piegeur.png"));
+		images.put("char"		,new Image("char.png"	));
+		draw(gc);
+		root.getChildren().add(canvas);
+		Scene scene = new Scene(root);
+		stage.setTitle("Hello Paint");
+		stage.setScene(scene);
+		stage.show();
+	}
+	//DEMMARE LE MENU INTERACTIF, A UTILISER DANS LANCEMENT:
+	public void lancement(String[] args) {
+		launch(args);
 	}
 }

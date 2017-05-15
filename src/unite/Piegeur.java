@@ -1,10 +1,10 @@
 package unite;
 
-import Terrain.Base;
-import Terrain.Coordonnees;
-import Terrain.Direction;
-import Terrain.Obstacle;
-import Terrain.Plateau;
+import terrain.Base;
+import terrain.Coordonnees;
+import terrain.Direction;
+import terrain.Obstacle;
+import terrain.Plateau;
 
 public class Piegeur extends Robot{
 	public Piegeur(int equipe, Coordonnees coord, Plateau plateau) {

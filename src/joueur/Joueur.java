@@ -1,6 +1,6 @@
 package joueur;
 import java.util.ArrayList;
-import Terrain.Base;
+import terrain.Base;
 import unite.Robot;
 
 public class Joueur {

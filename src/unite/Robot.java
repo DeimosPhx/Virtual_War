@@ -1,9 +1,9 @@
 package unite;
 
-import Terrain.Coordonnees;
-import Terrain.Direction;
-import Terrain.Parcelle;
-import Terrain.Plateau;
+import terrain.Coordonnees;
+import terrain.Direction;
+import terrain.Parcelle;
+import terrain.Plateau;
 
 public abstract class Robot extends Parcelle {
 	
@@ -35,4 +35,3 @@ public abstract class Robot extends Parcelle {
 		return super.cord.getOrdonnee();
 	}
 }
-	

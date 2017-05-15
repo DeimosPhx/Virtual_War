@@ -1,7 +1,7 @@
 package joueur;
 import javax.*;
 import javax.swing.JOptionPane;
-import Terrain.*;
+import terrain.*;
 import unite.*;
 
 public class Lancement {
@@ -26,26 +26,26 @@ public class Lancement {
 
 	private static int askUnite(Joueur J) {
 		String reponseJoueur = "";
-			reponseJoueur = JOptionPane.showInputDialog("J"+J.getEquipe()+"Avec quelle unite veux-tu faire ton action ?\n unite1\n unite2\n unite3");
+		reponseJoueur = JOptionPane.showInputDialog("J"+J.getEquipe()+"Avec quelle unite veux-tu faire ton action ?\n unite1\n unite2\n unite3");
 
-			if		(reponseJoueur.equals(UNITE1))	{return 1;}
-			else if	(reponseJoueur.equals(UNITE2))	{return 2;}
-			else if	(reponseJoueur.equals(UNITE3))	{return 3;}
+		if		(reponseJoueur.equals(UNITE1))	{return 1;}
+		else if	(reponseJoueur.equals(UNITE2))	{return 2;}
+		else if	(reponseJoueur.equals(UNITE3))	{return 3;}
 
-			else{ JOptionPane.showInputDialog("Ca ne veut rien dire.");
-			return 0;
-			}
+		else{ JOptionPane.showInputDialog("Ca ne veut rien dire.");
+		return 0;
 		}
+	}
 
 	private static int askActionTireurChar() {
 		String reponseJoueur = "";
-			reponseJoueur = JOptionPane.showInputDialog("Rentre ton action : se DEPLACER ou TIRER");
-			if		(reponseJoueur.equals(DEPLACER)){return 1;}
-			else if	(reponseJoueur.equals(TIRER))	{return 2;}
+		reponseJoueur = JOptionPane.showInputDialog("Rentre ton action : se DEPLACER ou TIRER");
+		if		(reponseJoueur.equals(DEPLACER)){return 1;}
+		else if	(reponseJoueur.equals(TIRER))	{return 2;}
 
-			else{ JOptionPane.showInputDialog("Ca ne veut rien dire.");
-			return 0;
-			}
+		else{ JOptionPane.showInputDialog("Ca ne veut rien dire.");
+		return 0;
+		}
 	}
 
 	private static int askActionPiegeur() {
@@ -74,7 +74,7 @@ public class Lancement {
 	private static Direction askDirection8(){
 		String reponseJoueur = "";
 		while(true){
-			reponseJoueur = JOptionPane.showInputDialog("Rentre ta direction : HAUT, BAS, GAUCHE, DROITE, HAUTGAUCHE, HAUTDROITE, BASGAUCHE, BASDROITE");
+			reponseJoueur = JOptionPane.showInputDialog("Rentre ta direction : HAUT, BAS, GAUCHE, DROITE, HAUT GAUCHE, HAUT DROITE, BAS GAUCHE, BAS DROITE");
 			if		(reponseJoueur.equals(HAUT))		{return Direction.HAUT;}
 			else if	(reponseJoueur.equals(BAS))			{return Direction.BAS;}
 			else if	(reponseJoueur.equals(GAUCHE))		{return Direction.GAUCHE;}
@@ -99,7 +99,8 @@ public class Lancement {
 		Base B1 = new Base(new Coordonnees(0,0),1);
 		Base B2 = new Base(new Coordonnees(9,9),2);
 		Joueur J1 = new Joueur(1,B1,vueJ1);
-		Joueur J2 = new Joueur(2,B2,vueJ2);		
+		Joueur J2 = new Joueur(2,B2,vueJ2);	
+		Robot robotMort = null;
 		plat.setBase(B1);
 		plat.setBase(B2);
 		Menu.setObstacle(plat,J1,J2);
@@ -110,6 +111,9 @@ public class Lancement {
 		int selecUnit,selecAction;
 		Direction selecDirec;
 		while(!j1aperdu && !j2aperdu){
+			//ON AFFICHE LE GRAPHIQUE
+			plat.updateUI();
+
 			/*
 			 * TOUR DE J1
 			 */
@@ -119,13 +123,21 @@ public class Lancement {
 				isOut = false;
 				do{
 					selecUnit = askUnite(J1);
-					if(selecUnit == 0){System.out.println("ERROR: impossible de trouver l'unité demandé!");}
+					if(selecUnit == 0){System.out.println("ERROR: impossible de trouver l'unite demande!");}
 				}while(selecUnit == 0);
 				selecAction = askActionTireurChar();
-				do{
-					selecDirec = askDirection4();
-					if(selecDirec.equals(null)){System.out.println("ERROR: impossible de determiner la direction!");}
-				}while(selecDirec.equals(null));
+				if(J1.getRobot(selecUnit-1) instanceof Char || selecAction == 2){
+					do{
+						selecDirec = askDirection4();
+						if(selecDirec == null){System.out.println("ERROR: impossible de determiner la direction!");}
+					}while(selecDirec == null);
+				}
+				else{
+					do{
+						selecDirec = askDirection8();
+						if(selecDirec == null){System.out.println("ERROR: impossible de determiner la direction!");}
+					}while(selecDirec == null);
+				}
 				switch(selecAction){
 				case 0:
 					//error
@@ -135,6 +147,10 @@ public class Lancement {
 				case 1:
 					//deplacement
 					isOut = plat.deplacerTest(J1,J1.getRobot(selecUnit-1), selecDirec);
+					//si c'est un char, 2 deplacement.
+					if(J1.getRobot(selecUnit-1) instanceof Char){
+						plat.deplacerTest(J1,J1.getRobot(selecUnit-1), selecDirec);
+					}
 					break;
 				case 2:
 					//tire
@@ -145,6 +161,39 @@ public class Lancement {
 					break;
 				}
 			}while(!isOut);
+			
+			
+
+			/*
+			 * ON SUPPRIME LES ROBOTS MORTS (RIP)
+			 */
+			do{
+				robotMort = null;
+				for(Robot r : J1.getListeRobot()){
+					if(r.getEnergie()<=0){
+						robotMort = r;
+					}
+				}
+				if(robotMort != null){
+					J1.getListeRobot().remove(robotMort);
+					plat.getGrille()[robotMort.getAbscisse()][robotMort.getOrdonnee()]=new Parcelle(robotMort.getCord());
+				}
+			}while(robotMort != null);
+			do{
+				robotMort = null;
+				for(Robot r : J2.getListeRobot()){
+					if(r.getEnergie()<=0){
+						robotMort = r;
+					}
+				}
+				if(robotMort !=null){
+					J2.getListeRobot().remove(robotMort);
+					plat.getGrille()[robotMort.getAbscisse()][robotMort.getOrdonnee()]=new Parcelle(robotMort.getCord());
+				}
+			}while(robotMort != null);
+			
+			//ON AFFICHE LE GRAPHIQUE
+			plat.updateUI();
 
 			/*
 			 * TOUR DE J2
@@ -154,13 +203,21 @@ public class Lancement {
 				isOut = false;
 				do{
 					selecUnit = askUnite(J2);
-					if(selecUnit == 0){System.out.println("ERROR: impossible de trouver l'unité demandé");}
+					if(selecUnit == 0){System.out.println("ERROR: impossible de trouver l'unite demande");}
 				}while(selecUnit == 0);
 				selecAction = askActionTireurChar();
-				do{
-					selecDirec = askDirection4();
-					if(selecDirec.equals(null)){System.out.println("ERROR: impossible de determiner la direction!");}
-				}while(selecDirec.equals(null));
+				if(J1.getRobot(selecUnit-1) instanceof Char || selecAction == 2){
+					do{
+						selecDirec = askDirection4();
+						if(selecDirec == null){System.out.println("ERROR: impossible de determiner la direction!");}
+					}while(selecDirec == null);
+				}
+				else{
+					do{
+						selecDirec = askDirection8();
+						if(selecDirec == null){System.out.println("ERROR: impossible de determiner la direction!");}
+					}while(selecDirec == null);
+				}
 				switch(selecAction){
 				case 0:
 					//error
@@ -170,6 +227,9 @@ public class Lancement {
 				case 1:
 					//deplacement
 					isOut = plat.deplacerTest(J2,J2.getRobot(selecUnit-1), selecDirec);
+					if(J2.getRobot(selecUnit-1) instanceof Char){
+						plat.deplacerTest(J2,J2.getRobot(selecUnit-1), selecDirec);
+					}
 					break;
 				case 2:
 					//tire
@@ -180,9 +240,31 @@ public class Lancement {
 					break;
 				}
 			}while(!isOut);
+			do{
+				robotMort = null;
+				for(Robot r : J1.getListeRobot()){
+					if(r.getEnergie()<=0){
+						robotMort = r;
+					}
+				}
+				if(robotMort != null){
+					J1.getListeRobot().remove(robotMort);
+					plat.getGrille()[robotMort.getAbscisse()][robotMort.getOrdonnee()]=new Parcelle(robotMort.getCord());
+				}
+			}while(robotMort != null);
+			do{
+				robotMort = null;
+				for(Robot r : J2.getListeRobot()){
+					if(r.getEnergie()<=0){
+						robotMort = r;
+					}
+				}
+				if(robotMort !=null){
+					J2.getListeRobot().remove(robotMort);
+					plat.getGrille()[robotMort.getAbscisse()][robotMort.getOrdonnee()]=new Parcelle(robotMort.getCord());
+				}
+			}while(robotMort != null);
 		}
-		
-
 	}
 
 }

@@ -1,10 +1,10 @@
 package unite;
 
-import Terrain.Coordonnees;
-import Terrain.Direction;
-import Terrain.Obstacle;
-import Terrain.Parcelle;
-import Terrain.Plateau;
+import terrain.Coordonnees;
+import terrain.Direction;
+import terrain.Obstacle;
+import terrain.Parcelle;
+import terrain.Plateau;
 
 public class Char extends Robot{
 

@@ -1,6 +1,6 @@
 package unite;
-import Terrain.Coordonnees;
-import Terrain.Parcelle;
+import terrain.Coordonnees;
+import terrain.Parcelle;
 public class Mine extends Parcelle{
 	
 	public Mine(int equipe, Coordonnees coordonnees){
