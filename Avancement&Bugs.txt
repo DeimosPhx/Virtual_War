@@ -1,0 +1,13 @@
+Avancement:
+- Plateau graphique
+- Toutes les règles de mouvements sont faites (collisions,sorties de plateau,entrer/sortir de la base,2 cases pour les chars)
+
+Reste à faire:
+- Amélioré l'interface utilisateur (en cours)
+- Coder l'IA
+- Mettre en place la séléction d'unité à la sourie + affichage des stats de l'unitée séléctionnée
+- Mouvement après séléction
+
+Bugs:
+- Génération des obstacles trop aléatoire et ne réspectant pas forcément les règles implémentées.
+- Certaines saisies ne sont pas encore sécurisées et peuvent causer une erreur si l'entrée est invalide.

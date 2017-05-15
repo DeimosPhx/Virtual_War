@@ -32,72 +32,12 @@ import Terrain.*;
 import unite.*;
 
 public class LancementEnFX extends Application {
-	private static Map<String,Image> images= new HashMap<>();
 	private int tailleX =10,tailleY=10, tauxObstacle=0;
-	private static final int tailleParcelle=50;
-	private boolean tourJ1,menu = true, joueur1EstHumain = true, joueur2EstHumain = true;
+	private boolean joueur1EstHumain = true, joueur2EstHumain = true;
 	private int nbCharJ1, nbCharJ2, nbTireurJ1, nbTireurJ2, nbPiegeurJ1, nbPiegeurJ2;
+	private ArrayList<Robot> compoJ1 =  new ArrayList<Robot>();
+	private ArrayList<Robot> compoJ2 = new ArrayList<Robot>();
 
-
-
-	private void draw(GraphicsContext gc){
-		if(menu){
-		}else{
-			for (int x=0; x<tailleX; x++){
-				for (int y=0; y<tailleY; y++){
-					if 	  (Plateau.grille[y][x] instanceof Char) {
-						if(Plateau.grille[y][x].getEquipe()==1){
-							gc.drawImage(images.get("1char"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-						else{
-							gc.drawImage(images.get("2char"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-					}
-					else if(Plateau.grille[y][x] instanceof Obstacle) {
-						gc.drawImage(images.get("1obstacle"),x*tailleParcelle,y*tailleParcelle+100);
-					}
-					else if(Plateau.grille[y][x] instanceof Base) {
-						if(Plateau.grille[y][x].getEquipe()==1){
-							gc.drawImage(images.get("1base"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-						else{
-							gc.drawImage(images.get("2base"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-					}
-					else if(Plateau.grille[y][x] instanceof Tireur) {
-						if(Plateau.grille[y][x].getEquipe()==1){
-							gc.drawImage(images.get("1tireur"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-						else{
-							gc.drawImage(images.get("2tireur"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-					}
-					else if(Plateau.grille[y][x] instanceof Mine) {
-						if(Plateau.grille[y][x].getEquipe()==1 && tourJ1){
-							gc.drawImage(images.get("1mine"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-						else if(Plateau.grille[y][x].getEquipe()==2 && !tourJ1){
-							gc.drawImage(images.get("2mine"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-						else{
-							gc.drawImage(images.get("herbe"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-					}
-					else if(Plateau.grille[y][x] instanceof Piegeur) {
-						if(Plateau.grille[y][x].getEquipe()==1){
-							gc.drawImage(images.get("1piegeur"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-						else{
-							gc.drawImage(images.get("2piegeur"),x*tailleParcelle,y*tailleParcelle+100);
-						}
-					}
-					else {
-						gc.drawImage(images.get("herbe"),x*tailleParcelle,y*tailleParcelle+100);
-					}
-				}
-			}
-		}
-	}
 
 	public void start(Stage stage) throws Exception {
 		VBox root = new VBox();
@@ -111,7 +51,7 @@ public class LancementEnFX extends Application {
 		HBox J2hbox2 = new HBox();
 		HBox J2hbox3 = new HBox();
 
-		Canvas canvas = new Canvas (0,50);
+		Canvas canvas = new Canvas (0,80);
 		GraphicsContext gc = canvas.getGraphicsContext2D();
 		/*Plateau plat = Menu.acceuil();
 		Vue vueJ1 = new Vue(1,plat);
@@ -124,7 +64,7 @@ public class LancementEnFX extends Application {
 		Label tauxObstacleLabel = new Label("0");
 		Label compoJ1 = new Label("Joueur 1");
 		Label compoJ2 = new Label("Joueur 2");
-		
+
 		Slider slider = new Slider(0,70,1);
 
 		Button J1CharPlus = 	new Button(" + ");
@@ -187,9 +127,9 @@ public class LancementEnFX extends Application {
 				J2Tireur.setText(nbTireurJ2+"");
 			}
 		});
-		
-		
-		
+
+
+
 		J1CharMoins.setOnAction(e ->{
 			if(nbCharJ1>0){
 				nbCharJ1--;
@@ -226,9 +166,9 @@ public class LancementEnFX extends Application {
 				J2Tireur.setText(nbTireurJ2+"");
 			}
 		});
-		
+
 		final ToggleGroup groupJ1 = new ToggleGroup();
-		
+
 		Label identiteJ1 = new Label("Identité du Joueur 1 : ");
 		HBox humainIaJ1 = new HBox();
 		RadioButton AiJ1 = new RadioButton("IA");
@@ -238,8 +178,8 @@ public class LancementEnFX extends Application {
 		humainJ1.setSelected(true);
 
 		humainIaJ1.getChildren().addAll(AiJ1,humainJ1);
-		
-		
+
+
 		final ToggleGroup groupJ2 = new ToggleGroup();
 
 		Label identiteJ2 = new Label("Identité du Joueur 2 : ");
@@ -249,10 +189,13 @@ public class LancementEnFX extends Application {
 		RadioButton humainJ2 = new RadioButton("Humain");
 		humainJ2.setToggleGroup(groupJ2);
 		humainJ2.setSelected(true);
-		
+
 		humainIaJ2.getChildren().addAll(AiJ2,humainJ2);
 
-		
+
+		Button start = new Button("Sutaruto !");
+		start.setMinSize(40, 20);
+
 		ImageView Ichar 	= new ImageView(new Image("char.png"));
 		ImageView Ipiegeur 	= new ImageView(new Image("piegeur.png"));
 		ImageView Itireur 	= new ImageView(new Image("tireur.png"));
@@ -296,9 +239,9 @@ public class LancementEnFX extends Application {
 		 */
 
 
-		root.getChildren().addAll(ObstacleBox,slider,compoJ1,J1hbox1,J1hbox3,J1hbox2,compoJ2,J2hbox1,J2hbox3,J2hbox2,identiteJ1,humainIaJ1,identiteJ2,humainIaJ2);
+		root.getChildren().addAll(ObstacleBox,slider,compoJ1,J1hbox1,J1hbox3,J1hbox2,compoJ2,J2hbox1,J2hbox3,J2hbox2,identiteJ1,humainIaJ1,identiteJ2,humainIaJ2,start);
 		VBox.setMargin(ObstacleBox, new Insets(10, 0, 10, 70));
-		
+
 		VBox.setMargin(J1hbox1, new Insets(0, 0, 0, 8));
 		VBox.setMargin(J2hbox1, new Insets(0, 0, 0, 8));
 
@@ -306,7 +249,7 @@ public class LancementEnFX extends Application {
 		VBox.setMargin(J2hbox2, new Insets(0, 10, 0, 10));
 		VBox.setMargin(compoJ1, new Insets(10, 0, 0, 100));
 		VBox.setMargin(compoJ2, new Insets(10, 0, 0, 100));
-		
+
 
 		HBox.setMargin(J1CharPlus, 		new Insets(0,10,0,0));
 		HBox.setMargin(J1PiegeurPlus, 	new Insets(0,10,0,0));
@@ -319,49 +262,46 @@ public class LancementEnFX extends Application {
 
 		HBox.setMargin(J2Char,		new Insets(0, 70, 0, 40));
 		HBox.setMargin(J2Piegeur,	new Insets(0, 70, 0, 0));
-		
+
 		VBox.setMargin(identiteJ1, new Insets(30, 0, 10, 50));
-		VBox.setMargin(identiteJ2, new Insets(30, 0, 10, 50));
+		VBox.setMargin(identiteJ2, new Insets(10, 0, 10, 50));
 
 		VBox.setMargin(humainIaJ1, new Insets(30, 0, 10, 50));
-		VBox.setMargin(humainIaJ2, new Insets(30, 0, 10, 50));
-		
+		VBox.setMargin(humainIaJ2, new Insets(30, 0, 0, 50));
+
 		HBox.setMargin(AiJ1, new Insets(0, 30, 0, 0));
 		HBox.setMargin(AiJ2, new Insets(0, 30, 0, 0));
 
+		VBox.setMargin(start, new Insets(20,0,0,80));
+		stage.setResizable(false);
+
 		//new Insets(topRightBottomLeft)
-		
+
 		root.setBackground(new Background(new BackgroundImage(new Image("background.png"),BackgroundRepeat.REPEAT,BackgroundRepeat.REPEAT,BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT)));
 		root.getChildren().add(canvas);
 		Scene scene = new Scene(root);
 		stage.setTitle("Virtual War");
 		stage.setScene(scene);
-		stage.show();
-		draw(gc);
-		
-		//UTILISER : 
-		humainJ1.isSelected();
-		humainJ2.isSelected();
+		stage.show();		
+
+		start.setOnAction(e->{
+			joueur1EstHumain = humainJ1.isSelected();
+			joueur2EstHumain = humainJ2.isSelected();
+			Jeu jeu = new Jeu(tauxObstacle, this.compoJ1, this.compoJ2, joueur1EstHumain, joueur2EstHumain,nbCharJ1, nbCharJ2, nbTireurJ1, nbTireurJ2, nbPiegeurJ1, nbPiegeurJ2);
+			try {
+				jeu.start(stage);
+				stage.close();
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//stage.setScene(jeu.scene);
+		});
 
 	}
-	private static void initialisation(){
-		images.put("herbe"		,new Image("/images/Herbe.png"));
-		images.put("herbe"		,new Image("/images/Herbe.png"));
-		images.put("1obstacle"	,new Image("/images/Montagne.png"));
-		images.put("2obstacle"	,new Image("/images/Foret.png"	));
-		images.put("1base"		,new Image("/images/Base1.png"	));
-		images.put("2base"		,new Image("/images/Base2.png"	));
-		images.put("1char"		,new Image("/images/Char1.png"	));
-		images.put("2char"		,new Image("/images/Char2.png"	));
-		images.put("1tireur"	,new Image("/images/Tireur1.png"	));
-		images.put("2tireur"	,new Image("/images/Tireur2.png"	));
-		images.put("1piegeur"	,new Image("/images/piegeur1.png"));
-		images.put("2piegeur"	,new Image("/images/piegeur2.png"));
-		images.put("1mine"		,new Image("/images/Mine1.png"	));
-		images.put("2mine"		,new Image("/images/Mine2.png"	));
-	}
+
+
 	public static void main(String[] args) {
-		initialisation();
 		Application.launch(args);
 	}
 
