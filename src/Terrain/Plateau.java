@@ -30,7 +30,7 @@ public class Plateau extends JPanel{
 	private Random r = new Random();
 	//constructors
 	//CHANGEMENT
-		private boolean tourJ1 = true;
+	private boolean tourJ1 = true;
 	public Plateau(int taillex,int tailley){
 		this.grille = new Parcelle[taillex][tailley];
 		this.tailleX = taillex;
@@ -41,7 +41,7 @@ public class Plateau extends JPanel{
 				this.grille[i][j] = new Parcelle(new Coordonnees(i,j));
 			}
 		}
-		
+
 	}
 
 	public Parcelle[][] getGrille(){
@@ -121,18 +121,39 @@ public class Plateau extends JPanel{
 				rob.deployer(j.getBase().getCord());
 				j.addRobot(rob);
 			}
-				if(!(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] instanceof Base)){
-					this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(new Coordonnees(cord_unit.getAbscisse(),cord_unit.getOrdonnee()));
-				}
+			if(!(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] instanceof Base)){
+				this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()] = new Parcelle(new Coordonnees(cord_unit.getAbscisse(),cord_unit.getOrdonnee()));
+			}
 			return true;
 		}
 	}
-	
+	public boolean peuxDeplacer(Joueur j,Robot rob,Direction direc){
+		/*
+		 * Meme chose que deplacertest, mais qui ne renvoie qu'un boolean.
+		 */
+		Coordonnees cord_unit = rob.getCord();
+		if(!this.estDans(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()].getCord().cibler(direc.getCoordonnees()))){
+			/*
+			 * on ne fait rien car on sort du tableau
+			 */
+			return false;
+		}
+		else if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Obstacle || this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Robot){
+			/*
+			 * on ne fait rien car on rencontre un obstacle ou un robot
+			 */
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
+
 	public boolean estDans(Coordonnees cord){
 		return this.tailleX > cord.getAbscisse() && this.tailleY > cord.getOrdonnee()
 				&& cord.getAbscisse() >=0 && cord.getOrdonnee() >=0;
 	}
-	
+
 	public String toString(){
 		String out = new String("");
 		for(int x=0;x<this.tailleX;x++){
