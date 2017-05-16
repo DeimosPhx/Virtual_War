@@ -3,11 +3,11 @@ import unite.*;
 import java.util.ArrayList;
 
 public class Base extends Parcelle{
-	private ArrayList<Robot> lst;
+	private ArrayList<Robot> lst = new ArrayList<Robot>();
+	
 	public Base(Coordonnees cord){
 		super(cord);
 		super.equipe = 0;
-		lst = new ArrayList<Robot>();
 	}
 	public boolean estDans(Robot rob){
 		boolean in = false;
@@ -28,6 +28,12 @@ public class Base extends Parcelle{
 	public Base(Coordonnees cord,int equipe){
 		this(cord);
 		super.equipe = equipe;
+	}
+	public Robot getRobot(int index){
+		return lst.get(index);
+	}
+	public int getTailleListe(){
+		return lst.size();
 	}
 	/*public String toString(){
 		if(this.equipe == 1){

@@ -42,6 +42,6 @@ public class Joueur {
 		this.equipe = equipe;
 	}
 	public void addRobot(Robot robot){
-		listeRobot.put(listeRobot.size()+1,robot);
+		listeRobot.put(listeRobot.size(),robot);
 	}
 }
