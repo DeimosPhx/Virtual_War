@@ -252,6 +252,7 @@ public class Jeu extends Application{
 		stage.show();
 
 		draw(gcJeu);
+		
 	}
 
 }
