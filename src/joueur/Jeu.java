@@ -1,5 +1,11 @@
 package joueur;
 
+import java.awt.Paint;
+import java.awt.PaintContext;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.ColorModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,18 +13,22 @@ import java.util.Random;
 
 import javax.swing.JOptionPane;
 
+import com.sun.prism.paint.Color;
+
 import Terrain.Base;
 import Terrain.Coordonnees;
 import Terrain.Obstacle;
 import Terrain.Parcelle;
 import Terrain.Plateau;
 import javafx.application.Application;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import unite.Char;
 import unite.Mine;
@@ -28,7 +38,7 @@ import unite.Tireur;
 
 public class Jeu extends Application{
 	private int tauxObstacle, tailleX = 10, tailleY=10;
-	
+
 	private HashMap<Integer,Robot> compoJ1 = new HashMap<Integer,Robot>();
 	private HashMap<Integer,Robot> compoJ2 = new HashMap<Integer,Robot>();
 	boolean joueur1EstHumain, joueur2EstHumain;
@@ -39,6 +49,7 @@ public class Jeu extends Application{
 	private static HashMap<String,Image> images= new HashMap<String,Image>();
 	private static final int tailleParcelle=50;
 	private boolean tourJ1;
+	private Robot selectedRobot = null;
 
 	private static void initialisation(){
 		images.put("herbe"		,new Image("Herbe.png"	));
@@ -61,7 +72,7 @@ public class Jeu extends Application{
 		images.put("2tireurBase",new Image("infanterieDansBaseJ2.png"));
 		images.put("2piegeurBase",new Image("piegeurDansBaseJ2.png"));
 	}
-	
+
 	private void setUniteDansbase(){
 		ArrayList<Robot> lstJ1 = new ArrayList<Robot>();
 		for(int i=0;i<compoJ1.size();i++){
@@ -74,7 +85,7 @@ public class Jeu extends Application{
 		B1.setList(lstJ1);
 		B2.setList(lstJ2);
 	}
-	
+
 	public void setReglage(int tauxObstacle,boolean joueur1EstHumain,boolean joueur2EstHumain,int nbCharJ1,int nbCharJ2,int nbTireurJ1,int nbTireurJ2,int nbPiegeurJ1,int nbPiegeurJ2){
 		this.tauxObstacle = tauxObstacle;
 		setCompo( nbCharJ1, nbCharJ2, nbTireurJ1, nbTireurJ2, nbPiegeurJ1, nbPiegeurJ2, plateau);
@@ -162,7 +173,7 @@ public class Jeu extends Application{
 	}
 
 	public void draw(GraphicsContext gc){
-		
+		gc.clearRect(0, 0,tailleX*tailleParcelle,tailleY*tailleParcelle+160);
 		//AFFICHER LES UNITES DANS LA BASE :
 		for(int i=0;i<B1.getTailleListe();i++){
 			if		(B1.getRobot(i) instanceof Char){
@@ -237,6 +248,44 @@ public class Jeu extends Application{
 				}
 			}
 		}
+		//ON VAS AFFICHER LE ROBOT ACTUELLEMENT SELECTIONNER :
+		if(selectedRobot != null){
+			if(selectedRobot.getEquipe()==1){gc.setStroke(Color.RED);}
+			else{gc.setStroke(Color.BLUE);}
+			gc.strokeRect(selectedRobot.getAbscisse()*tailleParcelle, selectedRobot.getOrdonnee()*tailleParcelle+80, tailleParcelle, tailleParcelle);
+		}
+		
+	}
+	private ArrayList<Hitboxe> getHitboxes(HashMap<Integer,Robot> unites){
+		ArrayList<Hitboxe> hitboxes = new ArrayList<Hitboxe>();
+		if(unites.get(0).getEquipe()==1){
+			for(int i =0; i<B1.getTailleListe();i++){
+				hitboxes.add(new Hitboxe(new Rectangle(i*50,0,tailleParcelle,tailleParcelle),B1.getRobot(i)));
+			}
+			for(int i =0; i<unites.size();i++){
+
+				if(!(unites.get(i).getCord().equals(new Coordonnees(0, 0)))){
+					hitboxes.add(new Hitboxe(new Rectangle(unites.get(i).getAbscisse()*tailleParcelle ,
+							unites.get(i).getOrdonnee()*tailleParcelle+80,
+							tailleParcelle,tailleParcelle),unites.get(i)));
+				}
+			}
+		}
+		else{
+			for(int i =0; i<B2.getTailleListe();i++){
+				hitboxes.add(new Hitboxe(new Rectangle(450-i*50, 90+tailleY*50,tailleParcelle,tailleParcelle),B2.getRobot(i)));
+			}
+			for(int i =0; i<unites.size();i++){
+
+				if(!(unites.get(i).getCord().equals(new Coordonnees(9, 9)))){
+					hitboxes.add(new Hitboxe(new Rectangle(unites.get(i).getAbscisse()*tailleParcelle ,
+							unites.get(i).getOrdonnee()*tailleParcelle+80,
+							tailleParcelle,tailleParcelle),unites.get(i)));
+				}
+			}
+
+		}
+		return hitboxes;
 
 	}
 
@@ -250,9 +299,32 @@ public class Jeu extends Application{
 		Scene sceneJeu = new Scene(root);
 		stage.setScene(sceneJeu);
 		stage.show();
-
 		draw(gcJeu);
-		
+		canvas.setOnMouseClicked(e -> {
+			boolean hasFindSomething = false;
+			for(Hitboxe h : getHitboxes(joueur1.getListeRobot())){
+				if(h.getHitboxe().contains(new Point2D(e.getSceneX(),e.getSceneY()))){
+					selectedRobot=h.getRobot();
+					hasFindSomething = true;
+				}
+			}
+			for(Hitboxe h : getHitboxes(joueur2.getListeRobot())){
+				if(h.getHitboxe().contains(new Point2D(e.getSceneX(),e.getSceneY()))){
+					selectedRobot=h.getRobot();
+					hasFindSomething = true;
+				}
+			}
+			if(hasFindSomething){
+				System.out.println(selectedRobot);
+			}else{selectedRobot = null;}
+			
+			
+			
+			
+			draw(gcJeu);
+		});
+
+
 	}
 
 }
