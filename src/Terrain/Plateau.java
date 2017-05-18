@@ -132,6 +132,12 @@ public class Plateau extends JPanel{
 		 * Meme chose que deplacertest, mais qui ne renvoie qu'un boolean.
 		 */
 		Coordonnees cord_unit = rob.getCord();
+		if(rob instanceof Char && (
+				direc.equals(Direction.BAS_DROITE) 
+						|| direc.equals(Direction.BAS_GAUCHE)
+						|| direc.equals(Direction.HAUT_DROITE)
+						|| direc.equals(Direction.HAUT_GAUCHE))){return false;}
+
 		if(!this.estDans(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()].getCord().cibler(direc.getCoordonnees()))){
 			/*
 			 * on ne fait rien car on sort du tableau

@@ -17,6 +17,7 @@ import com.sun.prism.paint.Color;
 
 import Terrain.Base;
 import Terrain.Coordonnees;
+import Terrain.Direction;
 import Terrain.Obstacle;
 import Terrain.Parcelle;
 import Terrain.Plateau;
@@ -71,6 +72,9 @@ public class Jeu extends Application{
 		images.put("2charBase"	,new Image("charDansBase2.png"));
 		images.put("2tireurBase",new Image("infanterieDansBaseJ2.png"));
 		images.put("2piegeurBase",new Image("piegeurDansBaseJ2.png"));
+		images.put("1herbe",	new Image("HerbeJ1.png"));
+		images.put("2herbe",	new Image("HerbeJ2.png"));
+
 	}
 
 	private void setUniteDansbase(){
@@ -243,19 +247,33 @@ public class Jeu extends Application{
 						gc.drawImage(images.get("2piegeur"),x*tailleParcelle,y*tailleParcelle+80);
 					}
 				}
-				else {
-					gc.drawImage(images.get("herbe"),x*tailleParcelle,y*tailleParcelle+80);
+				else {gc.drawImage(images.get("herbe"),x*tailleParcelle,y*tailleParcelle+80);}}}
+
+		//ON VAS AFFICHER LE ROBOT ACTUELLEMENT SELECTIONNER :
+		if(selectedRobot != null){
+			if(selectedRobot.getEquipe()==1){}
+			else{}
+			gc.strokeRect(selectedRobot.getAbscisse()*tailleParcelle, selectedRobot.getOrdonnee()*tailleParcelle+80, tailleParcelle, tailleParcelle);
+		}
+		//Affichons l'interface dynamique :
+		for (int x=0; x<tailleX; x++){
+			for (int y=0; y<tailleY; y++){
+				if(selectedRobot!=null){
+					for(Direction d : Direction.values()){
+						if(x==1&y==0){System.out.println(x +"/"+ selectedRobot.getAbscisse()+d.getCoordonnees().getOrdonnee()+" "+y+"/"+selectedRobot.getAbscisse()+d.getCoordonnees().getAbscisse());}
+						if(plateau.peuxDeplacer(joueur1, selectedRobot, d) 
+								&& x==selectedRobot.getAbscisse()+d.getCoordonnees().getOrdonnee()
+								&& y==selectedRobot.getOrdonnee()+d.getCoordonnees().getAbscisse()){
+							if(selectedRobot.getEquipe()==1){gc.drawImage(images.get("1herbe"),x*tailleParcelle,y*tailleParcelle+80);}
+							else{gc.drawImage(images.get("2herbe"),x*tailleParcelle,y*tailleParcelle+80);}
+						}
+					}
 				}
 			}
 		}
-		//ON VAS AFFICHER LE ROBOT ACTUELLEMENT SELECTIONNER :
-		if(selectedRobot != null){
-			if(selectedRobot.getEquipe()==1){gc.setStroke(Color.RED);}
-			else{gc.setStroke(Color.BLUE);}
-			gc.strokeRect(selectedRobot.getAbscisse()*tailleParcelle, selectedRobot.getOrdonnee()*tailleParcelle+80, tailleParcelle, tailleParcelle);
-		}
-		
 	}
+
+
 	private ArrayList<Hitboxe> getHitboxes(HashMap<Integer,Robot> unites){
 		ArrayList<Hitboxe> hitboxes = new ArrayList<Hitboxe>();
 		if(unites.get(0).getEquipe()==1){
@@ -317,10 +335,10 @@ public class Jeu extends Application{
 			if(hasFindSomething){
 				System.out.println(selectedRobot);
 			}else{selectedRobot = null;}
-			
-			
-			
-			
+
+
+
+
 			draw(gcJeu);
 		});
 
