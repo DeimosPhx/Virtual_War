@@ -1,10 +1,10 @@
 package unite;
 
-import Terrain.Coordonnees;
-import Terrain.Direction;
-import Terrain.Obstacle;
-import Terrain.Parcelle;
-import Terrain.Plateau;
+import terrain.Coordonnees;
+import terrain.Direction;
+import terrain.Obstacle;
+import terrain.Parcelle;
+import terrain.Plateau;
 
 public class Tireur extends Robot {
 	
@@ -15,7 +15,7 @@ public class Tireur extends Robot {
 		super.plateau = plateau;
 	}
 	
-	private Robot getRobotFromPlateau(Direction direction){
+	public Robot getRobotFromPlateau(Direction direction){
 		return (Robot) plateau.getContenu(super.cord.cibler(direction.getCoordonnees().multiplier(distanceDeTir(direction))));
 	}
 	public Coordonnees getCoordonnees(){return super.cord;}
@@ -35,15 +35,11 @@ public class Tireur extends Robot {
 		boolean sortir = false;
 		for(int facteur = 1; facteur <= getPortee(); facteur++){
 			if(plateau.estDans(super.cord.cibler(direction.getCoordonnees().multiplier(facteur)))){
-				System.out.println("on est bien dans le plateau");
 				if(plateau.getContenu(super.cord.cibler(direction.getCoordonnees().multiplier(facteur))) instanceof Robot
 						|| plateau.getContenu(super.cord.cibler(direction.getCoordonnees().multiplier(facteur))) instanceof Obstacle ){
 					sortir = true;
-					System.out.println("un obstacle ou un robot allié gene le tir !");
 					if(plateau.getContenu(super.cord.cibler(direction.getCoordonnees().multiplier(facteur))) instanceof Robot){
-						System.out.println("y'a bien un robot");
 						if(getRobotFromPlateau(direction).getEquipe() != this.equipe){
-							System.out.println("Le robot est de l'équipe adverse ! yey on tire !");
 							return true;
 						}
 					}
@@ -74,6 +70,9 @@ public class Tireur extends Robot {
 	}
 	public void recuperationEnergie() {
 		this.energie += this.getEnergieRecupEnBase();
+		if(this.energie>=40){
+			this.energie=40;
+		}
 	}
 	public String toString(){
 		if(getEquipe()==1){return "T";}

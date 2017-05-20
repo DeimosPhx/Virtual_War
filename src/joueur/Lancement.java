@@ -1,7 +1,9 @@
 package joueur;
+import java.util.ArrayList;
+
 import javax.*;
 import javax.swing.JOptionPane;
-import Terrain.*;
+import terrain.*;
 import unite.*;
 
 public class Lancement {
@@ -88,7 +90,7 @@ public class Lancement {
 	}
 
 	public static void main(String args[]) {
-
+		Menu menu = new Menu();
 		boolean j1aperdu = false, tourJoueur1 = true,j2aperdu = false;
 		int reponseUnite = 0; 
 		int reponseAction = 0; 
@@ -104,10 +106,19 @@ public class Lancement {
 		plat.setBase(B1);
 		plat.setBase(B2);
 		Menu.setObstacle(plat,J1,J2);
+		//menu.lancement(args);
 		J1.setList(Menu.compo(J1, plat));
 		J2.setList(Menu.compo(J2, plat));
-		B1.setList(J1.getListeRobot());
-		B2.setList(J2.getListeRobot());
+		ArrayList<Robot> compoj1 = new ArrayList<Robot>();
+		for(Robot r : J1.getListeRobot()){
+			compoj1.add(r);
+		}
+		ArrayList<Robot> compoj2 = new ArrayList<Robot>();
+		for(Robot r : J2.getListeRobot()){
+			compoj2.add(r);
+		}
+		B1.setList(compoj1);
+		B2.setList(compoj2);
 		int selecUnit,selecAction;
 		Direction selecDirec;
 		while(!j1aperdu && !j2aperdu){

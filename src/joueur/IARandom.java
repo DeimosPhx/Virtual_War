@@ -1,9 +1,9 @@
 package joueur;
 
 import java.util.Random;
-import Terrain.Base;
-import Terrain.Direction;
-import Terrain.Plateau;
+import terrain.Base;
+import terrain.Direction;
+import terrain.Plateau;
 import joueur.Joueur;
 import joueur.Vue;
 import unite.Char;

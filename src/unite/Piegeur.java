@@ -1,19 +1,21 @@
 package unite;
 
-import Terrain.Base;
-import Terrain.Coordonnees;
-import Terrain.Direction;
-import Terrain.Obstacle;
-import Terrain.Plateau;
+import terrain.Base;
+import terrain.Coordonnees;
+import terrain.Direction;
+import terrain.Obstacle;
+import terrain.Plateau;
 
 public class Piegeur extends Robot{
+	private int nbrMine;
 	public Piegeur(int equipe, Coordonnees coord, Plateau plateau) {
 		super(coord);
 		super.energie = 50;
 		super.equipe = equipe;
 		super.plateau = plateau;
+		this.nbrMine = 9;
 	}
-	
+	public int getNbrMine(){ 		return nbrMine;}
 	public int getEnergie() {		return super.energie;}
 	public int getDegat() {			return 2;}
 	public int getPortee() {		return 1;}
@@ -24,14 +26,15 @@ public class Piegeur extends Robot{
 
 	public boolean tirer(Direction direction) {
 		this.plateau.setMine(super.cord.cibler(direction.getCoordonnees()), new Mine(this.equipe, super.cord));
+		nbrMine--;
 		return false;
 	}
 
 	public boolean peutTirer(Direction direction) {
 		if(plateau.estDans(super.cord.cibler(direction.getCoordonnees()))){
 			if(!((plateau.getContenu(super.cord.cibler(direction.getCoordonnees()))) instanceof Robot)
-				&& !((plateau.getContenu(super.cord.cibler(direction.getCoordonnees()))) instanceof Base)
-				&& !((plateau.getContenu(super.cord.cibler(direction.getCoordonnees()))) instanceof Obstacle)){
+					&& !((plateau.getContenu(super.cord.cibler(direction.getCoordonnees()))) instanceof Base)
+					&& !((plateau.getContenu(super.cord.cibler(direction.getCoordonnees()))) instanceof Obstacle)){
 				return true;
 			}
 		}
@@ -46,11 +49,20 @@ public class Piegeur extends Robot{
 	}
 	public void recuperationEnergie() {
 		this.energie += this.getEnergieRecupEnBase();
+		if(this.energie>=50){
+			this.energie=50;
+		}
+		nbrMine = 10;
 	}
 	public String toString(){
 		if(this.equipe==1){
 			return "P";
 		}
 		return "p";
+	}
+
+	@Override
+	public Robot getRobotFromPlateau(Direction direction) {
+		return this;
 	}
 }

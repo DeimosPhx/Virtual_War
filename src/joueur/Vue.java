@@ -1,7 +1,7 @@
 package joueur;
-import Terrain.Parcelle;
-import Terrain.Coordonnees;
-import Terrain.Plateau;
+import terrain.Parcelle;
+import terrain.Coordonnees;
+import terrain.Plateau;
 import unite.Mine;
 public class Vue {
 
