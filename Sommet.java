@@ -12,7 +12,10 @@ public class Sommet {
 	private ArrayList<Arete> listeVoisins;
 	private Arete areteRecord;
 	private boolean possedeDejaUnRecord = false;
+	private boolean estUneAreteExceptionnelle;
+	private int poidsDuChemin;
 	
+	public Sommet(){}
 	public Sommet(ArrayList<Arete> listeVoisins){
 		this.listeVoisins = listeVoisins;
 	}
@@ -32,15 +35,25 @@ public class Sommet {
 	}
 	public ArrayList<Arete> getListeVoisins() {
 		return listeVoisins;
-	}
-	public void addAreteListeVoisins(Arete arete) {
-		listeVoisins.add(arete);
 	}	
 	public Coordonnees getCoordonnees() {
 		return coordonnees;
 	}
 	public void setCoordonnees(Coordonnees coordonnees) {
 		this.coordonnees = coordonnees;
+	}
+	public void setPossedeDejaUnRecord(boolean record){
+		this.possedeDejaUnRecord = record;
+	}
+	public void setAreteExceptionnelle(boolean bool){
+		this.estUneAreteExceptionnelle = bool;
+	}
+	
+	public int getPoidsDuChemin() {
+		return poidsDuChemin;
+	}
+	public void setPoidsDuChemin(int poidsDuChemin) {
+		this.poidsDuChemin = poidsDuChemin;
 	}
 	public ArrayList<Arete> remplirVoisinsTireurPiegeur(Plateau plateau,Coordonnees coordonnees,ArrayList<Sommet> listeSommet){
 		
@@ -105,74 +118,97 @@ public class Sommet {
 		return listeVoisins;
 	}
 
-	public void explorer(Arete explore,ArrayList<Arete>listeAreteAExplorer){
+	public static void explorer(Arete explore,ArrayList<Arete>listeAreteAExplorer,ArrayList<Sommet> listeSommetAtteint){
 		//exploration de l'arete choisie
 		Sommet aExplorer = explore.getSortant();
 		for(Arete arete : aExplorer.listeVoisins){
 			listeAreteAExplorer.add(arete);
 		}
 		listeAreteAExplorer.remove(explore);
+		if(!listeSommetAtteint.contains(aExplorer)){
+			listeSommetAtteint.add(aExplorer);
+		}
 		
 	}
-	public Sommet choisirProchainSommetAExplorer(Arete arete){
-		return arete.getSortant();
+
+	public static Arete choisirProchaineAreteAExplorer(ArrayList<Arete> listeAreteAExplorer){
+		return listeAreteAExplorer.get(0);
 	}
-	public Arete choisirProchaineAreteAExplorer(ArrayList<Arete> listeAreteAExplorer){
-		Arete tmp = listeAreteAExplorer.get(0);
-		listeAreteAExplorer.remove(listeAreteAExplorer.get(0));
-		return tmp;
-	}
+
 	
-	public int getRecordChemin(Sommet depart){
+	public int getRecordChemin(Sommet origine,Arete aTester){
+		if(aTester.getEntrant().equals(origine)){return 1;}
 		boolean cheminTermine = false;
-		int cpt=0;
+		Sommet s = aTester.getEntrant();
+		int cpt=1;
 		while(!cheminTermine){
-			cpt++;
-			Sommet suivant = this.getRecord().getEntrant();
-			Arete suivante = suivant.getRecord();
+			if(s.getAntecedent().equals(origine)){return cpt;}
+			s = s.getAntecedent();
+			if(s.getAntecedent().equals(origine)){return cpt;}
+			cpt += s.getRecord().getPoids();
+			if(s.getRecord().getPoids()==0){return cpt;}
+			if(s.getRecord().getEntrant().equals(aTester.getEntrant())){return this.getPoidsDuChemin()+1;}
+			if(s.getRecord().getSortant().getRecord().equals(s.getRecord().getEntrant())){return this.getPoidsDuChemin()+1;}
 			
-			if(suivante.getEntrant().equals(depart)){cheminTermine=true;}
-		}
-		return cpt;
-	}
-	
-	public int getRecordChemin(Sommet depart,Arete aTester){
-		boolean cheminTermine = false;
-		int cpt=0;
-		while(!cheminTermine){
-			cpt++;
-			Sommet suivant = aTester.getEntrant();
-			Arete suivante = suivant.getRecord();
-			
-			if(suivante.getEntrant().equals(depart)){cheminTermine=true;}
 		}
 		return cpt;
 	}
 
-	public void comparerRecord(Arete arete,Sommet depart){
-		if(!this.possedeDejaUnRecord){
-			this.setRecord(arete);
-		}else if(this.getRecordChemin(depart,arete)>this.getRecordChemin(depart)){
-			this.setRecord(arete);
+	public Sommet remonter(Arete aTester) {
+		return aTester.getEntrant();
+	}
+	public int comparerRecord(Arete arete,Sommet origine){
+		
+		if(this.estUneAreteExceptionnelle){
+			this.setRecord(new Arete(this,this,0));
+			this.setPossedeDejaUnRecord(true);
+			return 42;
 		}
+		
+		if(!this.possedeDejaUnRecord && !this.estUneAreteExceptionnelle){
+			this.setRecord(arete);
+			this.setPossedeDejaUnRecord(true);
+			this.setPoidsDuChemin(this.getRecordChemin(origine, arete));
+			return 0;
+			
+		}else if(this.getRecordChemin(origine,arete)>this.getRecordChemin(origine,this.getRecord()) && !this.estUneAreteExceptionnelle){
+			this.setRecord(arete);
+			this.setPoidsDuChemin(this.getRecordChemin(origine, arete));
+			return 1;
+		}
+		
+		return -1;
+
 	}
 
-	public Sommet remonteChemin(Sommet depart){
-		boolean cheminTermine = false;
-		Sommet justeAvant = new Sommet(new ArrayList<Arete>());
-		while(!cheminTermine){
-			justeAvant = this.getRecord().getEntrant();
-			Sommet suivant = justeAvant.getRecord().getEntrant();
-			Arete suivante = suivant.getRecord();
+
+	public Sommet remonteChemin(Sommet origine){
+
+		Sommet sommet = this;
+		Arete arete = new Arete();
+		boolean finDuChemin = false;
+		
+		while(!finDuChemin){
+			arete = sommet.getRecord();
+			sommet = arete.getEntrant();
 			
-			if(suivante.getEntrant().equals(depart)){cheminTermine=true;}
+			if(arete.getEntrant().equals(origine)){
+				finDuChemin = true;
+				return arete.getSortant();
+			}
 		}
-		return justeAvant;
+		return null;
 	
 	}
 	
 	public int getIndex(Plateau plateau){
 		return this.getCoordonnees().getOrdonnee()+this.getCoordonnees().getAbscisse()*plateau.getX();
+	}
+	public void setListeVoisins(ArrayList<Arete> listeVoisins) {
+		this.listeVoisins = listeVoisins;
+	}
+	public Sommet getAntecedent(){
+		return this.getRecord().getEntrant();
 	}
 
 

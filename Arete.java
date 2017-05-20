@@ -4,11 +4,17 @@ public class Arete {
 	
 	private Sommet entrant;
 	private Sommet sortant;
-	private final int POIDS = 1;
+	private int POIDS = 1;
 	
+	public Arete(){}
 	public Arete(Sommet entrant,Sommet sortant){
 		this.entrant = entrant;
 		this.sortant = sortant;
+	}
+	public Arete(Sommet entrant,Sommet sortant,int poids){
+		this.entrant = entrant;
+		this.sortant = sortant;
+		this.POIDS   = poids;
 	}
 	
 	public Sommet getEntrant() {
@@ -25,6 +31,10 @@ public class Arete {
 	}
 	public int getPoids() {
 		return POIDS;
+	}
+	public void setPoids(int poids) {
+		this.POIDS = poids;
+		
 	}
 	
 	public int getChemin(Sommet debut){

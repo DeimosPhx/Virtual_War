@@ -10,7 +10,7 @@ public class Dijkstra {
 	public static Direction deroulement(Plateau plateau,Robot robot,Coordonnees destination){
 		int typeDuRobot = -1;
 		if(robot instanceof Char){
-		 typeDuRobot = 1;
+			typeDuRobot = 1;
 		}
 		else if (robot instanceof Piegeur){
 			typeDuRobot = 2;
@@ -18,52 +18,49 @@ public class Dijkstra {
 		else if (robot instanceof Tireur){
 			typeDuRobot = 3;
 		}
-		Coordonnees emplacementRobot = robot.getCord();
-		ArrayList<Sommet> listeSommetGraphe = creationGraphe(plateau,typeDuRobot);
-		if(typeDuRobot == 1){
-			for(Sommet s : listeSommetGraphe){
-				s.remplirVoisinsChar(plateau, s.getCoordonnees(), listeSommetGraphe);
-			}
-		}
-		else{
-			for(Sommet s : listeSommetGraphe){
-				s.remplirVoisinsTireurPiegeur(plateau, s.getCoordonnees(), listeSommetGraphe);
-			}
-		}
 		
-		ArrayList<Sommet> listeSommetAtteint = new ArrayList<Sommet>();
-		ArrayList<Arete> listeAreteAExplorer = new ArrayList<Arete>();
-		Sommet arrive = new Sommet(new ArrayList<Arete>());
+//Initialisation du graphe		
 		
-		arrive.setCoordonnees(new Coordonnees(destination.getAbscisse(),destination.getOrdonnee()));
-		Sommet depart = listeSommetGraphe.get(emplacementRobot.getAbscisse()*plateau.getX()+emplacementRobot.getOrdonnee());
-		listeSommetAtteint.add(depart);
-		Sommet origine = depart;
-		//Arete areteDepart = depart.choisirProchaineAreteAExplorer(depart.getListeVoisins());
+		ArrayList<Sommet> listeSommetGraphe   = creationGraphe(plateau,typeDuRobot);
+		ArrayList<Sommet> listeSommetAtteint  = new ArrayList<Sommet>();
+		ArrayList<Arete>  listeAreteAExplorer = new ArrayList<Arete>();
 		
-		//Sommet sommetAExplorer = depart.choisirProchainSommetAExplorer(areteDepart);
-		for(Arete arete : depart.getListeVoisins()){
-			listeAreteAExplorer.add(arete);
-		}
-		boolean cheminTermine=false;
-		depart.explorer(depart.choisirProchaineAreteAExplorer(listeAreteAExplorer), listeAreteAExplorer);
-		Sommet sommetCherche = new Sommet(new ArrayList<Arete>());
-		while(!cheminTermine){
-			Arete areteSuivante = depart.choisirProchaineAreteAExplorer(listeAreteAExplorer);
-			depart = areteSuivante.getSortant();
-			depart.explorer(areteSuivante, listeAreteAExplorer);
-			depart.comparerRecord(areteSuivante,origine);
+		Sommet depart = listeSommetGraphe.get(robot.getCord().getOrdonnee()+robot.getCord().getAbscisse()*plateau.getX());
+		depart.setAreteExceptionnelle(true);
+		Sommet arrive = listeSommetGraphe.get(destination.getOrdonnee()+destination.getAbscisse()*plateau.getX());
 
-			for(int i=0;i<listeSommetAtteint.size();i++){
-				if(listeSommetAtteint.get(i).getIndex(plateau) == arrive.getIndex(plateau)){
-					cheminTermine=true;
-					sommetCherche = listeSommetAtteint.get(i).remonteChemin(origine);
-				}
+		for(Arete a : depart.getListeVoisins()){
+			listeAreteAExplorer.add(a);
+		}
+		Arete aExplorer = Sommet.choisirProchaineAreteAExplorer(listeAreteAExplorer);
+		listeSommetAtteint.add(depart);
+		depart.comparerRecord(new Arete(), depart);
+		Sommet cherche = new Sommet();
+		
+//On commence à explorer dans tout les sens!
+		int i=0;
+		boolean cheminFini=false;
+		while(!cheminFini){
+			Sommet.explorer(aExplorer, listeAreteAExplorer, listeSommetAtteint);
+			listeSommetAtteint.get(listeSommetAtteint.size()-1).comparerRecord(aExplorer, depart);
+			depart = aExplorer.getSortant();
+			aExplorer = Sommet.choisirProchaineAreteAExplorer(listeAreteAExplorer);
+			i++;
+			
+			for(Sommet s : listeSommetAtteint){
+				if(arrive.equals(s)){cheminFini = true;}
 			}
 		}
-		//fin du parcours
-		Coordonnees coordDuSommetCherche = sommetCherche.getCoordonnees();
-		return coordDuSommetCherche.coordonneeToDirection();
+		
+//Bon la on a chopé le sommet qui correspond à la fin du parcours, maintenant il faut remonter jusqu'à la source!
+		
+		/*for(Sommet s : listeSommetGraphe){
+			if(listeSommetAtteint.get(listeSommetAtteint.size()-1).equals(s)){cherche = s.remonteChemin(depart);}
+		}*/
+		cherche = listeSommetAtteint.get(listeSommetAtteint.size()-1).remonteChemin(listeSommetAtteint.get(0));
+		
+		Coordonnees c = new Coordonnees(cherche.getCoordonnees().getAbscisse()-listeSommetAtteint.get(0).getCoordonnees().getAbscisse(),cherche.getCoordonnees().getOrdonnee()-listeSommetAtteint.get(0).getCoordonnees().getOrdonnee());
+		return c.coordonneeToDirection();
 	}
 	
 	
@@ -73,6 +70,15 @@ public class Dijkstra {
 		for(int i=0;i<plateau.getY();i++){
 			for(int j=0;j<plateau.getX();j++){
 				listeSommetGraphe.add(new Sommet(new Coordonnees(i,j),new ArrayList<Arete>()));
+			}
+		}
+		if(typeDuRobot==1){
+			for(Sommet s : listeSommetGraphe){
+				s.remplirVoisinsChar(plateau, s.getCoordonnees(), listeSommetGraphe);
+			}
+		}else{
+			for(Sommet s : listeSommetGraphe){
+				s.remplirVoisinsTireurPiegeur(plateau, s.getCoordonnees(), listeSommetGraphe);
 			}
 		}
 		return listeSommetGraphe;
