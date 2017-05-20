@@ -284,6 +284,12 @@ public class LancementEnFX extends Application {
 		stage.show();		
 
 		start.setOnAction(e->{
+			if(nbCharJ1 == 0 &&  nbCharJ1==0 && nbTireurJ1==0){
+				nbCharJ1++;nbTireurJ1++;nbPiegeurJ1++;
+			}
+			if(nbTireurJ2==0 && nbPiegeurJ2==0 && nbPiegeurJ2==0){
+				nbCharJ2++;nbTireurJ2++;nbPiegeurJ2++;
+			}
 			joueur1EstHumain = humainJ1.isSelected();
 			joueur2EstHumain = humainJ2.isSelected();
 			Jeu jeu =new Jeu();
