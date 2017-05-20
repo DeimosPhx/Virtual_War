@@ -28,7 +28,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import Terrain.*;
+import terrain.*;
 import unite.*;
 
 public class LancementEnFX extends Application {

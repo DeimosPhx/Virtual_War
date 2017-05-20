@@ -2,13 +2,13 @@ package joueur;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Terrain.Base;
+import terrain.Base;
 import unite.Robot;
 
 public class Joueur {
 
 	int equipe;
-	private HashMap<Integer, Robot> listeRobot = new HashMap<Integer,Robot>();
+	private ArrayList<Robot> listeRobot = new ArrayList<Robot>();
 	private Base base;	
 	private Vue vue;
 	
@@ -23,25 +23,26 @@ public class Joueur {
 	public Base getBase(){
 		return this.base;
 	}
-	public void setList(HashMap<Integer, Robot> compoJ1){
+	public void setList(ArrayList<Robot> compoJ1){
 		this.listeRobot = compoJ1;
 	}
 	public Robot getRobot(int i){
 		return listeRobot.get(i);
 	}
-	public HashMap<Integer,Robot>getListeRobot(){
+	public ArrayList<Robot>getListeRobot(){
 		return listeRobot;
 	}
 	public void supprimerRobot(Robot robot){
-		listeRobot.remove(robot);
+		
 	}
 	public boolean Aperdu(){
-		return listeRobot.isEmpty();
+		//A ECRIRE
+		return false;
 	}
 	public Joueur(int equipe){
 		this.equipe = equipe;
 	}
 	public void addRobot(Robot robot){
-		listeRobot.put(listeRobot.size(),robot);
+		listeRobot.add(robot);
 	}
 }

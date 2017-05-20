@@ -1,18 +1,23 @@
 package unite;
 
-import Terrain.Coordonnees;
-import Terrain.Direction;
-import Terrain.Parcelle;
-import Terrain.Plateau;
+import terrain.Coordonnees;
+import terrain.Direction;
+import terrain.Parcelle;
+import terrain.Plateau;
 
 public abstract class Robot extends Parcelle {
-	
+	private boolean estMort = false;
 	public Robot(Coordonnees cord) {
 		super(cord);
 	}
-	int energie;
+	protected int energie;
 	Plateau plateau;
-	
+	public boolean getEstMort(){
+		return estMort;
+	}
+	public void setEstmort(){
+		estMort = true;
+	}
 	public void deployer(Coordonnees cord){
 		super.cord = cord;
 	}
@@ -34,5 +39,6 @@ public abstract class Robot extends Parcelle {
 	public int getOrdonnee(){
 		return super.cord.getOrdonnee();
 	}
+	public abstract Robot getRobotFromPlateau(Direction direction);
 }
 	

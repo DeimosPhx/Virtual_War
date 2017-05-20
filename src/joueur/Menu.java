@@ -8,7 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import unite.*;
-import Terrain.*;
+import terrain.*;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
