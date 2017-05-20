@@ -36,8 +36,12 @@ public class Joueur {
 		
 	}
 	public boolean Aperdu(){
-		//A ECRIRE
-		return false;
+		for(Robot r : listeRobot){
+			if(!r.getEstMort()){
+				return false;
+			}
+		}
+		return true;
 	}
 	public Joueur(int equipe){
 		this.equipe = equipe;

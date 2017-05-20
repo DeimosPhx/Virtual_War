@@ -7,13 +7,15 @@ import terrain.Obstacle;
 import terrain.Plateau;
 
 public class Piegeur extends Robot{
+	private int nbrMine;
 	public Piegeur(int equipe, Coordonnees coord, Plateau plateau) {
 		super(coord);
 		super.energie = 50;
 		super.equipe = equipe;
 		super.plateau = plateau;
+		this.nbrMine = 9;
 	}
-
+	public int getNbrMine(){ 		return nbrMine;}
 	public int getEnergie() {		return super.energie;}
 	public int getDegat() {			return 2;}
 	public int getPortee() {		return 1;}
@@ -24,6 +26,7 @@ public class Piegeur extends Robot{
 
 	public boolean tirer(Direction direction) {
 		this.plateau.setMine(super.cord.cibler(direction.getCoordonnees()), new Mine(this.equipe, super.cord));
+		nbrMine--;
 		return false;
 	}
 
@@ -49,6 +52,7 @@ public class Piegeur extends Robot{
 		if(this.energie>=50){
 			this.energie=50;
 		}
+		nbrMine = 10;
 	}
 	public String toString(){
 		if(this.equipe==1){

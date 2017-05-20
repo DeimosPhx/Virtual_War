@@ -96,6 +96,7 @@ public class Plateau extends JPanel{
 		 * coordonnees de la destination: this.grille[direc.getCoordonnees().getAbscisse()][direc.getCoordonnees().getOrdonnee()]
 		 */
 		Coordonnees cord_unit = rob.getCord();
+
 		if(!this.estDans(this.grille[cord_unit.getAbscisse()][cord_unit.getOrdonnee()].getCord().cibler(direc.getCoordonnees()))){
 			/*
 			 * on ne fait rien car on sort du tableau
@@ -109,6 +110,9 @@ public class Plateau extends JPanel{
 			return false;
 		}
 		else{
+			if(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Mine){
+				rob.subitDegatsEtMeurtPotentiellement(new Piegeur(0, null, null).getDegat());
+			}
 			if(!(this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] instanceof Base)){
 				this.grille[cord_unit.cibler(direc.getCoordonnees()).getAbscisse()][cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()] = rob;
 				rob.deployer(new Coordonnees(cord_unit.cibler(direc.getCoordonnees()).getAbscisse(),cord_unit.cibler(direc.getCoordonnees()).getOrdonnee()));

@@ -37,7 +37,9 @@ public class Jeu extends Application{
 	private static final int tailleParcelle=50;
 	private boolean tourjoueur1 = true;
 	private Robot selectedRobot = null;
-
+	private boolean modeMine = false;
+	private boolean j1gagne = false;
+	private boolean j2gagne = false;
 	private static void initialisation(){
 		images.put("herbe"		,new Image("Herbe.png"	));
 		images.put("1obstacle"	,new Image("Montagne.png"));
@@ -189,7 +191,7 @@ public class Jeu extends Application{
 			gc.setFill(Color.rgb((int)((100-pourcentageDeVie)*2.55), (int)(pourcentageDeVie*2.55),0));
 			gc.fillRect(450-i*50, 40+90+tailleY*50, pourcentageDeVie*0.4, 6);
 		}
-		
+
 		//AFFICHER LE PLATEAUDE JEU
 		for (int x=0; x<tailleX; x++){
 			for (int y=0; y<tailleY; y++){
@@ -277,7 +279,7 @@ public class Jeu extends Application{
 			}
 		}
 		//combat
-		if(selectedRobot!=null){
+		if(selectedRobot!=null && !(selectedRobot instanceof Piegeur)){
 			for (int x=0; x<tailleX; x++){
 				for (int y=0; y<tailleY; y++){
 					for(Direction d : Direction.values()){
@@ -290,7 +292,13 @@ public class Jeu extends Application{
 				}
 			}
 		}
-
+		if(j1gagne){
+			gc.clearRect(0, 0,tailleX*tailleParcelle,tailleY+300*tailleParcelle+300);
+			gc.fillText("Bravo joueur 1 ! Promis le prochaine ecran de fin sera mieux !", 10,50,1000); 
+		}
+		else if(j2gagne){
+			gc.fillText("Bravo joueur 2 ! Promis le prochaine ecran de fin sera mieux !", 10,50,1000); 
+		}
 	}
 
 
@@ -372,6 +380,8 @@ public class Jeu extends Application{
 		soignerLesRobotsEnBase(joueur2);
 		tuerLesRobotsQuiSontDCD(joueur1);
 		tuerLesRobotsQuiSontDCD(joueur2);
+		if(joueur1.Aperdu()){j2gagne = true;System.out.println("flag");}
+		if(joueur2.Aperdu()){j1gagne = true;System.out.println("flag");}
 	}
 
 	public void start(Stage stage) throws Exception {
@@ -401,7 +411,21 @@ public class Jeu extends Application{
 					}
 				}
 			}
-			if(selectedRobot != null){
+			if(e.isShiftDown() && selectedRobot instanceof Piegeur){
+				for(Hitboxe h : getHitboxes(selectedRobot)){
+					if(h.getHitboxe().contains(new Point2D(e.getSceneX(),e.getSceneY()))){
+						Piegeur p =  (Piegeur)selectedRobot;
+						if(p.getNbrMine()>=0){
+							System.out.println(p.getNbrMine());
+							selectedRobot.tirer(h.getDirection());
+							selectedRobot.subitDegatsEtMeurtPotentiellement(selectedRobot.getCout());
+							finDuTour();
+						}
+					}
+				}
+			}
+
+			if(selectedRobot != null && !(selectedRobot instanceof Piegeur && e.isShiftDown())){
 				for(Hitboxe h : getHitboxes(selectedRobot)){
 					if(h.getHitboxe().contains(new Point2D(e.getSceneX(),e.getSceneY()))){
 						if(selectedRobot.getEquipe()==1){
@@ -417,10 +441,7 @@ public class Jeu extends Application{
 							if(selectedRobot instanceof Char){plateau.deplacerTest(joueur2, selectedRobot, h.getDirection());}}
 					}
 				}
-				if(selectedRobot instanceof Piegeur){
-
-				}
-				else{
+				if(!(selectedRobot instanceof Piegeur)){
 					for(Hitboxe h : getHitboxesPourTaper(selectedRobot)){
 						if(h.getHitboxe().contains(new Point2D(e.getSceneX(),e.getSceneY()))){
 							selectedRobot.tirer(h.getDirection());
